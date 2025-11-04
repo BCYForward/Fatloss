@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Gymnast - Gym Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free Website Template" name="keywords">
+    <meta content="Free Website Template" name="description">
+
+    
+    <!-- Favicon -->
+    <link rel="icon" href="img/title.jpg" type="image/png" sizes="32x32">
+
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Flaticon Font -->
+    <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="css/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/Measurements.css">
+</head>
+
+<body class="bg-white">
+    <!-- Navbar Start -->
+    <div class="container-fluid p-0 nav-bar">
+        <nav class="navbar navbar-expand-lg bg-none navbar-dark py-3">
+            <a href="" class="navbar-brand">
+                <h1 class="m-0 display-4 font-weight-bold text-uppercase text-white">Fatloss</h1>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto p-4 bg-secondary">
+                    <a href="index.html" class="nav-item nav-link">Home</a>
+                    <a href="measurements.html" class="nav-item nav-link active">Measurements</a>
+                    <a href="diet.html" class="nav-item nav-link">Diet</a>
+                    <a href="workout.html" class="nav-item nav-link">Workout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Navbar End -->
+
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+            <h4 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold">Measurements</h4>
+            <div class="d-inline-flex">
+                <p class="m-0 text-white"><a class="text-white" href="">Home</a></p>
+                <p class="m-0 text-white px-2">/</p>
+                <p class="m-0 text-white">Measurements</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+
+
+    <!-- About Start -->
+    <div class="container py-5">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <img class="img-fluid mb-4 mb-lg-0 photo" src="img/about.jpg" alt="Gym Image">
+            </div>
+            <div class="col-lg-6">
+                <h2 class="display-4 font-weight-bold mb-4">Let's Begin with Basics</h2>
+                <p class="mb-4">Here are some information we need to collect for a better personalized plan</p>
+                
+                <form id="bodyMeasurementsForm">
+                    <!-- Height and Age -->
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <label for="height" class="form-label">Height (CM)</label>
+                            <input type="number" class="form-control" id="height" placeholder="Enter your height" min="100" max="250">
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="age" class="form-label">Age</label>
+                            <input type="number" class="form-control" id="age" placeholder="Enter your age" min="10" max="100">
+                        </div>
+                    </div>
+    
+                    <!-- Weight and Goal Weight -->
+                    <div class="row mb-3">
+                        <div class="col-sm-6">
+                            <label for="weight" class="form-label">Weight (KG)</label>
+                            <input type="number" class="form-control" id="weight" placeholder="Enter your weight" min="30" max="200">
+                        </div>
+                        <div class="col-sm-6">
+                            <label for="weightGoal" class="form-label">Goal Weight (KG)</label>
+                            <input type="number" class="form-control" id="weightGoal" placeholder="Enter goal weight" min="30" max="200">
+                        </div>
+                    </div>
+    
+                    <!-- BMI Info -->
+                    <div class="mb-3">
+                        <label for="bmi" class="form-label">BMI Index</label>
+                        <input type="text" class="form-control" id="bmi" placeholder="Auto-calculated after height & weight" readonly>
+                        <div class="form-text">
+                            <small>• Please enter height and weight</small><br>
+                            <small>• Target BMI: <span id="bmiGoal">--</span></small>
+                        </div>
+                    </div>
+    
+                    <hr class="my-4">
+    
+                    <!-- Current Body Type -->
+                    <div class="mb-3">
+                        <label class="form-label">Current Body Type</label>
+                        <div class="row g-2">
+                            <div class="col-6 col-md-3">
+                                <div class="form-check text-center">
+                                    <input class="btn-check" type="radio" name="currentBodyType" id="underweight" value="underweight">
+                                    <label class="btn btn-outline-secondary w-100" for="underweight">UW</label>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="form-check text-center">
+                                    <input class="btn-check" type="radio" name="currentBodyType" id="normal" value="normal">
+                                    <label class="btn btn-outline-secondary w-100" for="normal">Normal</label>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="form-check text-center">
+                                    <input class="btn-check" type="radio" name="currentBodyType" id="overweight" value="overweight">
+                                    <label class="btn btn-outline-secondary w-100" for="overweight">OW</label>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="form-check text-center">
+                                    <input class="btn-check" type="radio" name="currentBodyType" id="obese" value="obese">
+                                    <label class="btn btn-outline-secondary w-100" for="obese">Obese</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Goal Body Type -->
+                    <div class="mb-4">
+                        <label for="goalBodyType" class="form-label">Goal Body Type</label>
+                        <select class="form-select" id="goalBodyType">
+                            <option value="">Select your goal body type</option>
+                            <option value="normal">Normal Build</option>
+                            <option value="athletic">Athletic Build</option>
+                            <option value="toned">Toned Physique</option>
+                        </select>
+                    </div>
+    
+                    <button type="submit" class="btn btn-lg px-4 btn-primary w-100">Submit</button>
+                </form>
+    
+                <!-- Keep original feature cards -->
+                <div class="row py-4 g-4">
+                    <div class="col-sm-6">
+                        <i class="flaticon-barbell display-2 text-primary"></i>
+                        <h4 class="font-weight-bold">Our Promise</h4>
+                        <p>Your safe and effective fat loss plan, personalized for you</p>
+                    </div>
+                    <div class="col-sm-6">
+                        <i class="flaticon-medal display-2 text-primary"></i>
+                        <h4 class="font-weight-bold">Your Assurance</h4>
+                        <p>See real, trusted results on your fat loss journey</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- About End -->
+    
+    <div class="footer container-fluid mt-5 py-5 px-sm-3 px-md-5 text-white">
+        <div class="container border-top border-dark pt-5">
+            <p class="m-0 text-center text-white">
+                &copy; <a class="text-white font-weight-bold" href="#">Fatloss</a> All Rights Reserved.
+            </p>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-outline-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+
+    <!-- Contact Javascript File -->
+    <script src="mail/jqBootstrapValidation.min.js"></script>
+    <script src="mail/contact.js"></script>
+
+    <!-- Template Javascript -->
+    <script src="js/main.js"></script>
+
+    <script src="js/Measurements.js"></script>
+</body>
+
+</html>

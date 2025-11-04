@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Fatloss - Personalized Diet Plan</title>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <link rel="icon" href="img/title.jpg" type="image/png" sizes="32x32">
+  
+  
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+  <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
+  <link href="css/style.min.css" rel="stylesheet">
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/mobilenet"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/coco-ssd"></script>
+
+  
+  <style>
+    body {
+      background: linear-gradient(135deg, #f8fafb, #e8f3ed);
+      font-family: "Poppins", sans-serif;
+      color: #333;
+    }
+
+    .page-header {
+      background: linear-gradient(120deg, #28a745, #20c997);
+      box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.15);
+    }
+
+    .summary-box {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      padding: 30px;
+      margin-bottom: 40px;
+    }
+
+    .summary-box h4 {
+      color: #28a745;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+
+    .summary-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+    }
+
+    .summary-item:last-child {
+      border-bottom: none;
+    }
+
+    .summary-item span {
+      font-weight: 600;
+    }
+
+    .plan-section {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      margin-bottom: 40px;
+    }
+
+    .plan-section h4 {
+      color: #20c997;
+      font-weight: 700;
+      margin-bottom: 25px;
+    }
+
+    .meal-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 25px;
+      position: relative;
+    }
+
+    .meal-step::before {
+      content: "";
+      position: absolute;
+      left: 45px;
+      top: 35px;
+      height: calc(100% - 40px);
+      width: 2px;
+      background: #d6eadf;
+    }
+
+    .meal-icon {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      background: #28a745;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      z-index: 2;
+      flex-shrink: 0;
+    }
+
+    .meal-content {
+      margin-left: 30px;
+      background: #f9fdfb;
+      border-radius: 15px;
+      padding: 15px 20px;
+      flex: 1;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .meal-content img {
+      width: 110px;
+      height: 110px;
+      border-radius: 15px;
+      object-fit: cover;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      flex-shrink: 0;
+    }
+
+    .meal-text h5 {
+      margin: 0 0 8px;
+      color: #28a745;
+      font-weight: 700;
+    }
+
+    .meal-text ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .meal-text .macro {
+      font-size: 0.9rem;
+      margin-top: 8px;
+      color: #555;
+    }
+
+    .chart-wrapper {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      margin-top: 40px;
+    }
+
+    .chart-card {
+      background: #fff;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      margin-bottom: 50px;
+    }
+
+    .chart-card h5 {
+      text-align: center;
+      color: #20c997;
+      font-weight: 600;
+      margin-bottom: 15px;
+    }
+
+    .intensity {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 30px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .low {
+      background: #6c757d;
+    }
+
+    .medium {
+      background: #ffc107;
+    }
+
+    .high {
+      background: #dc3545;
+    }
+
+    /* Food Preference Styles */
+    .preference-section {
+      background: #fff;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      margin-bottom: 40px;
+    }
+    
+    .preference-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-top: 20px;
+    }
+    
+    .pref-option {
+      display: flex;
+      align-items: center;
+      padding: 12px 15px;
+      background: #f8f9fa;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .pref-option:hover {
+      background: #e9ecef;
+    }
+    
+    .pref-option.selected {
+      background: #d4edda;
+      border: 2px solid #28a745;
+    }
+    
+    .pref-option input {
+      margin-right: 10px;
+    }
+    
+    .generate-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 25px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      margin-top: 20px;
+      display: block;
+      width: 100%;
+    }
+    
+    .generate-btn:hover {
+      background: #218838;
+      transform: translateY(-2px);
+    }
+
+    /* AR Recognition Styles */
+    .ar-container {
+      margin-top: 20px;
+    }
+    
+    .camera-container {
+      position: relative;
+      width: 100%;
+      max-width: 600px;
+      margin: 0 auto 20px;
+      background: #000;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      min-height: 300px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    
+    #overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+    }
+    
+    .ar-buttons {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+    
+    .ar-buttons button {
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 1rem;
+    }
+    
+    #startARBtn {
+      background-color: #28a745;
+      color: white;
+    }
+    
+    #startARBtn:hover {
+      background-color: #218838;
+      transform: translateY(-2px);
+    }
+    
+    #stopARBtn {
+      background-color: #dc3545;
+      color: white;
+    }
+    
+    #stopARBtn:hover {
+      background-color: #c82333;
+      transform: translateY(-2px);
+    }
+    
+    #arResult {
+      background-color: #e8f5e9;
+      border-radius: 10px;
+      padding: 15px;
+      text-align: center;
+      font-weight: 600;
+      margin-top: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    #arResult.recognizing {
+      background-color: #fff3e0;
+    }
+    
+    #arResult.no-food {
+      background-color: #ffebee;
+    }
+    
+    .food-name {
+      font-size: 1.4rem;
+      color: #2e7d32;
+      margin-bottom: 5px;
+    }
+    
+    .calories {
+      font-size: 1.6rem;
+      color: #f57c00;
+      font-weight: bold;
+    }
+    
+    .status-message {
+      font-size: 1.1rem;
+      color: #666;
+    }
+    
+    /* Upload Section Styles */
+    .upload-area {
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .upload-area:hover {
+      border-color: #28a745;
+      background-color: #f1f8e9;
+    }
+    
+    .upload-area.dragover {
+      border-color: #28a745;
+      background-color: #e8f5e9;
+    }
+    
+    .food-preview {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    
+    .food-item {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      background: white;
+    }
+    
+    .food-item img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    
+    .food-info {
+      padding: 15px;
+    }
+    
+    .food-item-name {
+      font-weight: bold;
+      margin-bottom: 5px;
+      color: #333;
+    }
+    
+    .food-item-calories {
+      color: #f57c00;
+      font-weight: bold;
+    }
+    
+    .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(220, 53, 69, 0.8);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    
+    .loading {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-in-out infinite;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body>
+    <div class="container-fluid p-0 nav-bar">
+        <nav class="navbar navbar-expand-lg bg-none navbar-dark py-3">
+          <a href="" class="navbar-brand">
+            <h1 class="m-0 display-4 font-weight-bold text-uppercase text-white">Fatloss</h1>
+          </a>
+          <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+            <div class="navbar-nav ml-auto p-4 bg-secondary">
+              <a href="index.html" class="nav-item nav-link">Home</a>
+              <a href="measurements.html" class="nav-item nav-link">Measurements</a>
+              <a href="personal_diet.html" class="nav-item nav-link active">Diet plan</a>
+              <a href="personal_workout.html" class="nav-item nav-link">Workout plan</a>
+            </div>
+          </div>
+        </nav>
+      </div>
+
+      
+      <div class="container-fluid page-header mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+          <h4 class="display-4 mb-3 mt-lg-5 text-white text-uppercase font-weight-bold">Personalized Nutrition Plan</h4>
+          <div class="d-inline-flex text-white">
+            <p class="m-0"><a class="text-white" href="index.html">Home</a></p>
+            <p class="m-0 px-2">/</p>
+            <p class="m-0">Diet Plan</p>
+          </div>
+        </div>
+      </div>
+
+
+  <div class="container py-5">
+    <div class="summary-box">
+      <h4>Your Personalized Overview</h4>
+      <div class="summary-item"><span>Current Body Type:</span> <span id="currentType">-</span></div>
+      <div class="summary-item"><span>Goal Body Type:</span> <span id="goalType">-</span></div>
+      <div class="summary-item"><span>Goal:</span> <span id="goalSummary">-</span></div>
+      <div class="summary-item"><span>Target Calories:</span> <span id="targetCalories">-</span></div>
+      <div class="summary-item"><span>Target P/C/F (g):</span> <span id="targetMacrosSummary">-</span></div>
+      <div class="summary-item"><span>Training Intensity:</span> <span id="intensity" class="intensity medium">Medium</span></div>
+      <div class="summary-item"><span>Estimated Duration:</span> <span id="duration">8 weeks</span></div>
+    </div>
+
+    <div class="preference-section">
+      <h4>Food Preferences</h4>
+      <p>Select your dietary preferences to generate a personalized meal plan:</p>
+      
+      <div class="preference-options">
+        <label class="pref-option" id="pref-protein">
+          <input type="checkbox" name="preference" value="high-protein"> High Protein
+        </label>
+        <label class="pref-option" id="pref-lowcarb">
+          <input type="checkbox" name="preference" value="low-carb"> Low Carb
+        </label>
+        <label class="pref-option" id="pref-vegetarian">
+          <input type="checkbox" name="preference" value="vegetarian"> Vegetarian
+        </label>
+        <label class="pref-option" id="pref-glutenfree">
+          <input type="checkbox" name="preference" value="gluten-free"> Gluten Free
+        </label>
+        <label class="pref-option" id="pref-dairyfree">
+          <input type="checkbox" name="preference" value="dairy-free"> Dairy Free
+        </label>
+        <label class="pref-option" id="pref-vegan">
+          <input type="checkbox" name="preference" value="vegan"> Vegan
+        </label>
+      </div>
+      
+      <button id="generatePlanBtn" class="generate-btn">
+        <span class="loading" style="display: none;"></span>
+        Generate Personalized Meal Plan
+      </button>
+    </div>
+
+    <div class="plan-section">
+      <h4 id="planTitle">Daily Meal Schedule</h4>
+      <div id="mealTimeline"></div>
+    </div>
+
+    <div class="chart-wrapper">
+      <div class="chart-card">
+        <h5>Calorie Distribution by Meal</h5>
+        <canvas id="calorieChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h5>Macro Nutrients (P/C/F)</h5>
+        <canvas id="macroChart"></canvas>
+      </div>
+    </div>
+
+    <div class="plan-section">
+      <h4>Food Recognition</h4>
+      
+      <!-- AR Recognition Section -->
+      <div class="ar-container">
+        <h5 style="color: #28a745; margin-bottom: 15px;">Real-time Camera Recognition</h5>
+        <div class="ar-buttons">
+          <button id="startARBtn">
+            <span class="loading" style="display: none;"></span>
+            Start Camera Recognition
+          </button>
+          <button id="stopARBtn" disabled>Stop Camera Recognition</button>
+        </div>
+        
+        <div class="camera-container">
+          <video id="foodVideo" autoplay muted></video>
+          <canvas id="overlay"></canvas>
+        </div>
+        
+        <div id="arResult">
+          <div class="status-message">Click "Start Camera Recognition" to begin</div>
+        </div>
+      </div>
+      
+      <!-- Upload Section -->
+      <h5 style="color: #28a745; margin-top: 40px; margin-bottom: 15px;">Image Upload Recognition</h5>
+      <div class="upload-area" id="uploadArea">
+        <p>Drag & Drop images here or click to upload</p>
+        <input type="file" id="foodUpload" accept="image/*" multiple style="display: none;">
+      </div>
+      
+      <button id="clearAllBtn" class="btn" style="background-color: #dc3545; color: white; padding: 10px 20px; border-radius: 8px; border: none; font-weight: 600;">
+        Clear All Images
+      </button>
+      
+      <div class="food-preview" id="foodPreview">
+        <p style="grid-column: 1 / -1; text-align: center; color: #666; padding: 20px;">
+          Uploaded images will appear here
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer container-fluid mt-5 py-5 px-sm-3 px-md-5 text-white">
+    <div class="container border-top border-dark pt-5">
+      <p class="m-0 text-center text-white">&copy; <a class="text-white font-weight-bold" href="#">Fatloss</a> All Rights Reserved.</p>
+    </div>
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // Food database with multiple options for each meal type
+    const foodDatabase = {
+      breakfast: {
+        "high-protein": [
+          { name: "Scrambled Eggs with Spinach", img: "https://images.unsplash.com/photo-1551218808-94e220e084d2", items: ["3 large eggs", "1 cup spinach", "1 slice whole grain toast"] },
+          { name: "Greek Yogurt Bowl", img: "https://images.unsplash.com/photo-1488477181946-6428a0291777", items: ["1 cup Greek yogurt", "1/2 cup berries", "1 tbsp chia seeds", "1/4 cup granola"] },
+          { name: "Protein Pancakes", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445", items: ["2 protein pancakes", "1/2 cup mixed berries", "1 tbsp maple syrup"] }
+        ],
+        "low-carb": [
+          { name: "Avocado Egg Bowl", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8", items: ["2 boiled eggs", "1/2 avocado", "Handful of cherry tomatoes"] },
+          { name: "Chia Seed Pudding", img: "img/pudding.jpg", items: ["1 cup chia pudding", "1/4 cup mixed nuts", "1/2 cup berries"] },
+          { name: "Veggie Omelette", img: "https://images.unsplash.com/photo-1551782450-17144efb9c50", items: ["3 egg omelette", "Bell peppers, onions, mushrooms", "1 oz cheese"] }
+        ],
+        "vegetarian": [
+          { name: "Oatmeal with Fruits", img: "img/oatmeal.jpg", items: ["1 cup oatmeal", "1 banana", "1 tbsp honey", "1/4 cup walnuts"] },
+          { name: "Tofu Scramble", img: "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445", items: ["1/2 block tofu", "Mixed vegetables", "1 slice whole grain toast"] },
+          { name: "Smoothie Bowl", img: "img/smooth.jpg", items: ["1 banana", "1/2 cup berries", "1/4 cup oats", "1 tbsp almond butter"] }
+        ]
+      },
+      lunch: {
+        "high-protein": [
+          { name: "Grilled Chicken Salad", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c", items: ["5 oz grilled chicken", "Mixed greens", "Cherry tomatoes", "Light vinaigrette"] },
+          { name: "Turkey Wrap", img: "img/turkey_wrap.jpg", items: ["4 oz turkey", "Whole wheat wrap", "Lettuce, tomato", "1 tbsp hummus"] },
+          { name: "Salmon with Quinoa", img: "https://images.unsplash.com/photo-1467003909585-2f8a72700288", items: ["5 oz salmon", "1 cup cooked quinoa", "Steamed broccoli"] }
+        ],
+        "low-carb": [
+          { name: "Zucchini Noodles with Pesto", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999", items: ["2 cups zucchini noodles", "2 tbsp pesto", "Cherry tomatoes", "Parmesan cheese"] },
+          { name: "Cauliflower Rice Bowl", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd", items: ["2 cups cauliflower rice", "Mixed vegetables", "1/2 avocado", "Protein of choice"] },
+          { name: "Lettuce Wraps", img: "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9", items: ["Large lettuce leaves", "Ground turkey or tofu", "Diced vegetables", "Asian-style sauce"] }
+        ],
+        "vegetarian": [
+          { name: "Quinoa Salad", img: "https://images.unsplash.com/photo-1512621776951-a57141f2eefd", items: ["1 cup cooked quinoa", "Mixed vegetables", "Feta cheese", "Lemon vinaigrette"] },
+          { name: "Black Bean Burgers", img: "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9", items: ["2 black bean patties", "Whole wheat bun", "Lettuce, tomato", "Sweet potato fries"] },
+          { name: "Vegetable Stir Fry", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999", items: ["Mixed vegetables", "Tofu", "Brown rice", "Soy-ginger sauce"] }
+        ]
+      },
+      dinner: {
+        "high-protein": [
+          { name: "Lean Beef with Vegetables", img: "img/lean_beef.jpg", items: ["5 oz lean beef", "Roasted vegetables", "Small sweet potato"] },
+          { name: "Baked Cod with Asparagus", img: "https://images.unsplash.com/photo-1467003909585-2f8a72700288", items: ["6 oz cod fillet", "1 bunch asparagus", "1/2 cup brown rice"] },
+          { name: "Turkey Meatballs", img: "img/turkeymeatballs.jpg", items: ["5 turkey meatballs", "Zucchini noodles", "Marinara sauce"] }
+        ],
+        "low-carb": [
+          { name: "Stuffed Bell Peppers", img: "https://images.unsplash.com/photo-1598514982515-5f6ec8b8b3f8", items: ["2 bell peppers", "Ground turkey/beef", "Cauliflower rice", "Tomato sauce"] },
+          { name: "Eggplant Parmesan", img: "img/eggplant.jpg", items: ["1 large eggplant", "Marinara sauce", "Mozzarella cheese", "Fresh basil"] },
+          { name: "Grilled Chicken with Veggies", img: "https://images.unsplash.com/photo-1546069901-ba9599a7e63c", items: ["6 oz chicken breast", "Mixed grilled vegetables", "Side salad"] }
+        ],
+        "vegetarian": [
+          { name: "Lentil Curry", img: "img/lentil.jpg", items: ["1 cup lentil curry", "1/2 cup brown rice", "Naan bread"] },
+          { name: "Vegetable Lasagna", img: "https://images.unsplash.com/photo-1572802419224-296b0aeee0d9", items: ["2 slices vegetable lasagna", "Side salad", "Garlic bread"] },
+          { name: "Stuffed Portobello Mushrooms", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999", items: ["2 large portobello caps", "Quinoa stuffing", "Roasted vegetables"] }
+        ]
+      },
+      snack: {
+        "high-protein": [
+          { name: "Protein Shake", img: "img/shake.jpg", items: ["1 scoop protein powder", "1 cup almond milk", "1/2 banana"] },
+          { name: "Greek Yogurt with Nuts", img: "https://images.unsplash.com/photo-1488477181946-6428a0291777", items: ["1 cup Greek yogurt", "1/4 cup mixed nuts"] },
+          { name: "Hard-Boiled Eggs", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8", items: ["2 hard-boiled eggs", "Pinch of salt and pepper"] }
+        ],
+        "low-carb": [
+          { name: "Celery with Almond Butter", img: "img/celery.jpg", items: ["4 celery sticks", "2 tbsp almond butter"] },
+          { name: "Cheese and Olives", img: "https://images.unsplash.com/photo-1551218808-94e220e084d2", items: ["1 oz cheese", "1/4 cup olives"] },
+          { name: "Cucumber Slices with Hummus", img: "https://images.unsplash.com/photo-1540420773420-3366772f4999", items: ["1/2 cucumber", "3 tbsp hummus"] }
+        ],
+        "vegetarian": [
+          { name: "Apple with Peanut Butter", img: "img/apple_peanut.jpg", items: ["1 medium apple", "2 tbsp peanut butter"] },
+          { name: "Trail Mix", img: "img/dry_fruit.jpg", items: ["1/4 cup trail mix", "Dried fruits and nuts"] },
+          { name: "Rice Cakes with Avocado", img: "https://images.unsplash.com/photo-1525351484163-7529414344d8", items: ["2 rice cakes", "1/4 avocado", "Pinch of salt"] }
+        ]
+      }
+    };
+
+    // Food calories database for AI recognition
+    
+
+    const foodCalories = { banana: { name: "Banana", calories: 100 }, pizza: { name: "Pizza", calories: 285 }, apple: { name: "Apple", calories: 95 }, orange: { name: "Orange", calories: 62 }, sandwich: { name: "Sandwich", calories: 250 }, hotdog: { name: "Hotdog", calories: 290 }, carrot: { name: "Carrot", calories: 25 }, cake: { name: "Cake", calories: 350 }, chocolate: { name: "Chocolate", calories: 210 }, broccoli: { name: "Broccoli", calories: 55 }, chicken: { name: "Chicken", calories: 165 }, rice: { name: "Rice", calories: 130 }, salmon: { name: "Salmon", calories: 208 }, oatmeal: { name: "Oatmeal", calories: 150 }, strawberry: { name: "Strawberry", calories: 32 }, grapes: { name: "Grapes", calories: 69 }, watermelon: { name: "Watermelon", calories: 30 }, pineapple: { name: "Pineapple", calories: 50 }, mango: { name: "Mango", calories: 60 }, lettuce: { name: "Lettuce", calories: 15 }, spinach: { name: "Spinach", calories: 23 }, potato: { name: "Potato", calories: 77 }, sweetPotato: { name: "Sweet Potato", calories: 86 }, beef: { name: "Beef", calories: 250 }, pork: { name: "Pork", calories: 242 }, egg: { name: "Egg", calories: 155 }, milk: { name: "Milk", calories: 42 }, cheese: { name: "Cheese", calories: 402 }, yogurt: { name: "Yogurt", calories: 59 }, pasta: { name: "Pasta", calories: 131 }, noodles: { name: "Noodles", calories: 138 }, tomato: { name: "Tomato", calories: 18 }, cucumber: { name: "Cucumber", calories: 16 }, peanut: { name: "Peanut", calories: 567 }, almond: { name: "Almond", calories: 579 }, walnut: { name: "Walnut", calories: 654 }, coffee: { name: "Coffee", calories: 2 }, tea: { name: "Tea", calories: 1 }, soda: { name: "Soda", calories: 40 }, burger: { name: "Burger", calories: 295 }, fries: { name: "Fries", calories: 312 }, iceCream: { name: "Ice Cream", calories: 207 }, cookie: { name: "Cookie", calories: 502 }, donut: { name: "Donut", calories: 452 }, taco: { name: "Taco", calories: 226 }, sushi: { name: "Sushi", calories: 200 }, shrimp: { name: "Shrimp", calories: 99 }, tuna: { name: "Tuna", calories: 132 }, cod: { name: "Cod", calories: 82 }, lobster: { name: "Lobster", calories: 89 }, crab: { name: "Crab", calories: 97 }, octopus: { name: "Octopus", calories: 82 }, mushroom: { name: "Mushroom", calories: 22 }, bellPepper: { name: "Bell Pepper", calories: 31 }, onion: { name: "Onion", calories: 40 }, garlic: { name: "Garlic", calories: 149 }, cabbage: { name: "Cabbage", calories: 25 }, cauliflower: { name: "Cauliflower", calories: 25 }, zucchini: { name: "Zucchini", calories: 17 }, avocado: { name: "Avocado", calories: 160 }, pear: { name: "Pear", calories: 57 }, kiwi: { name: "Kiwi", calories: 61 }, blueberry: { name: "Blueberry", calories: 57 }, raspberry: { name: "Raspberry", calories: 52 }, blackberry: { name: "Blackberry", calories: 43 }, melon: { name: "Melon", calories: 34 }, papaya: { name: "Papaya", calories: 43 }, fig: { name: "Fig", calories: 74 }, dates: { name: "Dates", calories: 282 }, raisins: { name: "Raisins", calories: 299 }, oysters: { name: "Oysters", calories: 68 }, clams: { name: "Clams", calories: 74 }, scallops: { name: "Scallops", calories: 88 }, mackerel: { name: "Mackerel", calories: 205 }, sardine: { name: "Sardine", calories: 208 }, duck: { name: "Duck", calories: 337 }, lamb: { name: "Lamb", calories: 294 }, bacon: { name: "Bacon", calories: 541 }, sausage: { name: "Sausage", calories: 301 }, tofu: { name: "Tofu", calories: 76 }, tempeh: { name: "Tempeh", calories: 193 }, edamame: { name: "Edamame", calories: 121 }, chickpeas: { name: "Chickpeas", calories: 164 }, lentils: { name: "Lentils", calories: 116 }, beans: { name: "Beans", calories: 127 }, quinoa: { name: "Quinoa", calories: 120 }, corn: { name: "Corn", calories: 86 }, bread: { name: "Bread", calories: 265 }, bagel: { name: "Bagel", calories: 250 }, pancake: { name: "Pancake", calories: 227 }, waffle: { name: "Waffle", calories: 291 }, honey: { name: "Honey", calories: 304 }, jam: { name: "Jam", calories: 250 }, peanutButter: { name: "Peanut Butter", calories: 588 }, butter: { name: "Butter", calories: 717 }, oliveOil: { name: "Olive Oil", calories: 884 }, coconutOil: { name: "Coconut Oil", calories: 862 }, mayonnaise: { name: "Mayonnaise", calories: 680 }, ketchup: { name: "Ketchup", calories: 112 }, mustard: { name: "Mustard", calories: 66 }, soySauce: { name: "Soy Sauce", calories: 53 }, vinegar: { name: "Vinegar", calories: 21 }, spinachPie: { name: "Spinach Pie", calories: 200 }, lasagna: { name: "Lasagna", calories: 220 }, risotto: { name: "Risotto", calories: 130 }, gnocchi: { name: "Gnocchi", calories: 149 }, cereal: { name: "Cereal", calories: 379 }, granola: { name: "Granola", calories: 471 }, popcorn: { name: "Popcorn", calories: 387 }, pretzel: { name: "Pretzel", calories: 380 }, nachos: { name: "Nachos", calories: 420 }, brownie: { name: "Brownie", calories: 466 }, pudding: { name: "Pudding", calories: 155 }, muffin: { name: "Muffin", calories: 377 }, croissant: { name: "Croissant", calories: 406 }, baguette: { name: "Baguette", calories: 270 }, tortilla: { name: "Tortilla", calories: 218 }, falafel: { name: "Falafel", calories: 333 }, springRoll: { name: "Spring Roll", calories: 150 }, carbonara: { name: "Carbonara", calories: 280 }, alfredoPasta: { name: "Alfredo Pasta", calories: 320 }, bolognese: { name: "Bolognese", calories: 220 }, margheritaPizza: { name: "Margherita Pizza", calories: 250 }, pepperoniPizza: { name: "Pepperoni Pizza", calories: 290 }, cheeseburger: { name: "Cheeseburger", calories: 303 }, clubSandwich: { name: "Club Sandwich", calories: 330 }, chickenNuggets: { name: "Chicken Nuggets", calories: 290 }, fishAndChips: { name: "Fish And Chips", calories: 350 }, beefSteak: { name: "Beef Steak", calories: 271 }, porkChop: { name: "Pork Chop", calories: 231 }, meatball: { name: "Meatball", calories: 250 }, grilledChicken: { name: "Grilled Chicken", calories: 195 }, friedChicken: { name: "Fried Chicken", calories: 246 }, eggSalad: { name: "Egg Salad", calories: 180 }, caesarSalad: { name: "Caesar Salad", calories: 150 }, greekSalad: { name: "Greek Salad", calories: 120 }, potatoChips: { name: "Potato Chips", calories: 536 }, tortillaChips: { name: "Tortilla Chips", calories: 489 }, granolaBar: { name: "Granola Bar", calories: 471 }, energyBar: { name: "Energy Bar", calories: 400 }, fruitSalad: { name: "Fruit Salad", calories: 60 }, smoothie: { name: "Smoothie", calories: 120 }, latte: { name: "Latte", calories: 130 }, espresso: { name: "Espresso", calories: 5 }, cappuccino: { name: "Cappuccino", calories: 110 }, hotChocolate: { name: "Hot Chocolate", calories: 190 }, iceLatte: { name: "Ice Latte", calories: 150 }, mocha: { name: "Mocha", calories: 210 }, macaron: { name: "Macaron", calories: 470 }, tiramisu: { name: "Tiramisu", calories: 240 }, pavlova: { name: "Pavlova", calories: 250 }, crepe: { name: "Crepe", calories: 110 }, waffleCone: { name: "Waffle Cone", calories: 115 }, sorbet: { name: "Sorbet", calories: 120 }, gelato: { name: "Gelato", calories: 207 }, dumpling: { name: "Dumpling", calories: 180 }, springRollFried: { name: "Spring Roll (fried)", calories: 150 }, tempura: { name: "Tempura", calories: 200 }, ramen: { name: "Ramen", calories: 436 }, udon: { name: "Udon", calories: 127 }, soba: { name: "Soba", calories: 99 }, pho: { name: "Pho", calories: 75 }, padThai: { name: "Pad Thai", calories: 254 }, greenCurry: { name: "Green Curry", calories: 200 }, redCurry: { name: "Red Curry", calories: 220 }, yellowCurry: { name: "Yellow Curry", calories: 210 }, mashedPotato: { name: "Mashed Potato", calories: 88 }, roastPotato: { name: "Roast Potato", calories: 150 }, gravy: { name: "Gravy", calories: 50 }, beefStew: { name: "Beef Stew", calories: 190 }, chiliConCarne: { name: "Chili Con Carne", calories: 250 }, meatloaf: { name: "Meatloaf", calories: 290 }, spaghetti: { name: "Spaghetti", calories: 158 }, lasagnaMeat: { name: "Lasagna (meat)", calories: 220 }, macAndCheese: { name: "Mac And Cheese", calories: 305 }, quiche: { name: "Quiche", calories: 296 }, stuffedPeppers: { name: "Stuffed Peppers", calories: 160 }, falafelWrap: { name: "Falafel Wrap", calories: 300 }, chickenWrap: { name: "Chicken Wrap", calories: 280 }, vegetableSoup: { name: "Vegetable Soup", calories: 45 }, chickenSoup: { name: "Chicken Soup", calories: 70 }, misoSoup: { name: "Miso Soup", calories: 40 }, tomYum: { name: "Tom Yum", calories: 50 }, samosa: { name: "Samosa", calories: 260 }, pakora: { name: "Pakora", calories: 280 }, naan: { name: "Naan", calories: 270 }, pitaBread: { name: "Pita Bread", calories: 275 }, baguetteSandwich: { name: "Baguette Sandwich", calories: 290 }, bruschetta: { name: "Bruschetta", calories: 150 }, guacamole: { name: "Guacamole", calories: 160 }, hummus: { name: "Hummus", calories: 166 }, sushiRoll: { name: "Sushi Roll", calories: 200 }, nigiri: { name: "Nigiri", calories: 150 }, sashimi: { name: "Sashimi", calories: 120 }, tempuraRoll: { name: "Tempura Roll", calories: 210 }, calzone: { name: "Calzone", calories: 330 }, empanada: { name: "Empanada", calories: 220 }, churros: { name: "Churros", calories: 450 }, fajitas: { name: "Fajitas", calories: 250 }, burrito: { name: "Burrito", calories: 320 }, enchiladas: { name: "Enchiladas", calories: 300 }, tamales: { name: "Tamales", calories: 250 }, ceviche: { name: "Ceviche", calories: 120 }, crabCake: { name: "Crab Cake", calories: 195 }, clamChowder: { name: "Clam Chowder", calories: 180 }, lobsterBisque: { name: "Lobster Bisque", calories: 200 }, seaweedSalad: { name: "Seaweed Salad", calories: 45 }, edamameBeans: { name: "Edamame Beans", calories: 121 }, tofuStirFry: { name: "Tofu Stir Fry", calories: 180 }, stirFriedVegetables: { name: "Stir Fried Vegetables", calories: 80 }, kimchi: { name: "Kimchi", calories: 15 }, pickles: { name: "Pickles", calories: 12 }, sauerkraut: { name: "Sauerkraut", calories: 27 }, tempehStirFry: { name: "Tempeh Stir Fry", calories: 190 }, beanSalad: { name: "Bean Salad", calories: 120 }, chiliTofu: { name: "Chili Tofu", calories: 200 }, vegetableCurry: { name: "Vegetable Curry", calories: 180 }, bratwurst: { name: "Bratwurst", calories: 333 }, cornbread: { name: "Cornbread", calories: 375 }, applePie: { name: "Apple Pie", calories: 237 }, pumpkinPie: { name: "Pumpkin Pie", calories: 245 }, blueberryPie: { name: "Blueberry Pie", calories: 240 }, cheesecake: { name: "Cheesecake", calories: 321 }, chocolateCake: { name: "Chocolate Cake", calories: 350 }, carrotCake: { name: "Carrot Cake", calories: 400 }, brownBread: { name: "Brown Bread", calories: 250 }, ryeBread: { name: "Rye Bread", calories: 259 }, pumpernickel: { name: "Pumpernickel", calories: 259 }, naanBread: { name: "Naan Bread", calories: 270 }, flatbread: { name: "Flatbread", calories: 275 }, baguetteRoll: { name: "Baguette Roll", calories: 270 }, brioche: { name: "Brioche", calories: 360 }, danishPastry: { name: "Danish Pastry", calories: 430 }, croissantChocolate: { name: "Croissant Chocolate", calories: 406 }, painAuChocolat: { name: "Pain Au Chocolat", calories: 450 }, donutGlazed: { name: "Donut Glazed", calories: 452 }, cupcake: { name: "Cupcake", calories: 350 }, muffinBlueberry: { name: "Muffin Blueberry", calories: 377 }, scone: { name: "Scone", calories: 400 }, pretzelSoft: { name: "Pretzel Soft", calories: 380 }, popTart: { name: "Pop Tart", calories: 400 }, riceCake: { name: "Rice Cake", calories: 387 }, pancakesStack: { name: "Pancakes Stack", calories: 227 }, waffleBelgian: { name: "Waffle Belgian", calories: 291 }, crepeNutella: { name: "Crepe Nutella", calories: 150 }, eggsScrambled: { name: "Eggs Scrambled", calories: 155 }, omelette: { name: "Omelette", calories: 154 }, boiledEgg: { name: "Boiled Egg", calories: 155 }, poachedEgg: { name: "Poached Egg", calories: 155 }, friedEgg: { name: "Fried Egg", calories: 196 }, eggBenedict: { name: "Egg Benedict", calories: 209 }, frittata: { name: "Frittata", calories: 180 }, tamagoyaki: { name: "Tamagoyaki", calories: 140 }, baconStrips: { name: "Bacon Strips", calories: 541 }, hamSlices: { name: "Ham Slices", calories: 145 }, salami: { name: "Salami", calories: 407 }, pepperoni: { name: "Pepperoni", calories: 494 }, prosciutto: { name: "Prosciutto", calories: 250 }, mortadella: { name: "Mortadella", calories: 311 }, chorizo: { name: "Chorizo", calories: 455 }, turkeyBreast: { name: "Turkey Breast", calories: 135 }, chickenBreast: { name: "Chicken Breast", calories: 165 }, duckBreast: { name: "Duck Breast", calories: 337 }, lambChop: { name: "Lamb Chop", calories: 294 }, beefRibeye: { name: "Beef Ribeye", calories: 271 }, porkBelly: { name: "Pork Belly", calories: 518 }, porkLoin: { name: "Pork Loin", calories: 242 }, veal: { name: "Veal", calories: 172 }, meatballBeef: { name: "Meatball Beef", calories: 250 }, meatballPork: { name: "Meatball Pork", calories: 290 }, hamburgerPatty: { name: "Hamburger Patty", calories: 295 }, hotDogSausage: { name: "Hot Dog Sausage", calories: 290 }, fishFillet: { name: "Fish Fillet", calories: 206 }, tilapia: { name: "Tilapia", calories: 128 }, catfish: { name: "Catfish", calories: 105 }, salmonSmoked: { name: "Salmon Smoked", calories: 208 }, codFillet: { name: "Cod Fillet", calories: 82 }, trout: { name: "Trout", calories: 148 }, mackerelCanned: { name: "Mackerel Canned", calories: 205 }, sardineCanned: { name: "Sardine Canned", calories: 208 }, anchovy: { name: "Anchovy", calories: 210 }, octopusCooked: { name: "Octopus Cooked", calories: 82 }, squid: { name: "Squid", calories: 92 }, shrimpCooked: { name: "Shrimp Cooked", calories: 99 }, lobsterCooked: { name: "Lobster Cooked", calories: 89 }, crabCooked: { name: "Crab Cooked", calories: 97 }, clamCooked: { name: "Clam Cooked", calories: 74 }, oysterRaw: { name: "Oyster Raw", calories: 68 }, mussels: { name: "Mussels", calories: 86 }, seaBass: { name: "Sea Bass", calories: 97 }, halibut: { name: "Halibut", calories: 140 }, tunaCanned: { name: "Tuna Canned", calories: 132 }, salmonSteak: { name: "Salmon Steak", calories: 208 }, codBaked: { name: "Cod Baked", calories: 82 }, pastaCarbonara: { name: "Pasta Carbonara", calories: 280 }, pastaAlfredo: { name: "Pasta Alfredo", calories: 320 }, spaghettiBolognese: { name: "Spaghetti Bolognese", calories: 220 }, fettuccine: { name: "Fettuccine", calories: 221 }, penne: { name: "Penne", calories: 131 }, macaroni: { name: "Macaroni", calories: 157 }, lasagnaVegetarian: { name: "Lasagna Vegetarian", calories: 180 }, gnocchiPotato: { name: "Gnocchi Potato", calories: 149 }, ravioliCheese: { name: "Ravioli Cheese", calories: 220 }, tortellini: { name: "Tortellini", calories: 190 }, risottoMushroom: { name: "Risotto Mushroom", calories: 130 }, paella: { name: "Paella", calories: 160 }, cevicheShrimp: { name: "Ceviche Shrimp", calories: 120 }, sashimiTuna: { name: "Sashimi Tuna", calories: 120 }, sushiCalifornia: { name: "Sushi California", calories: 200 }, onigiri: { name: "Onigiri", calories: 180 }, tempuraShrimp: { name: "Tempura Shrimp", calories: 200 }, springRollVegetable: { name: "Spring Roll Vegetable", calories: 150 }, dumplingPork: { name: "Dumpling Pork", calories: 180 }, dumplingVegetable: { name: "Dumpling Vegetable", calories: 160 }, baoziPork: { name: "Baozi Pork", calories: 210 }, baoziVegetable: { name: "Baozi Vegetable", calories: 180 }, kimchiPancake: { name: "Kimchi Pancake", calories: 200 }, bibimbap: { name: "Bibimbap", calories: 210 }, ramenMiso: { name: "Ramen Miso", calories: 436 }, ramenTonkotsu: { name: "Ramen Tonkotsu", calories: 475 }, udonSoup: { name: "Udon Soup", calories: 127 }, sobaNoodles: { name: "Soba Noodles", calories: 99 }, phoBeef: { name: "Pho Beef", calories: 75 }, padSeeEw: { name: "Pad See Ew", calories: 250 }, padThaiShrimp: { name: "Pad Thai Shrimp", calories: 254 }, greenCurryChicken: { name: "Green Curry Chicken", calories: 200 }, redCurryBeef: { name: "Red Curry Beef", calories: 220 }, yellowCurryTofu: { name: "Yellow Curry Tofu", calories: 210 }, massamanCurryBeef: { name: "Massaman Curry Beef", calories: 250 }, tomYumShrimp: { name: "Tom Yum Shrimp", calories: 50 }, tomKhaChicken: { name: "Tom Kha Chicken", calories: 90 }, chiliCrab: { name: "Chili Crab", calories: 180 }, hainaneseChickenRice: { name: "Hainanese Chicken Rice", calories: 240 }, laksa: { name: "Laksa", calories: 260 }, satayChicken: { name: "Satay Chicken", calories: 230 }, chickenKatsu: { name: "Chicken Katsu", calories: 246 }, tonkatsu: { name: "Tonkatsu", calories: 300 }, yakitori: { name: "Yakitori", calories: 140 }, okonomiyaki: { name: "Okonomiyaki", calories: 200 }, takoyaki: { name: "Takoyaki", calories: 180 }, gimbap: { name: "Gimbap", calories: 220 }, tteokbokki: { name: "Tteokbokki", calories: 150 }, bibingka: { name: "Bibingka", calories: 200 }, haloHalo: { name: "Halo Halo", calories: 180 }, mochi: { name: "Mochi", calories: 200 }, taiyaki: { name: "Taiyaki", calories: 220 }, dorayaki: { name: "Dorayaki", calories: 250 }, greenTeaIceCream: { name: "Green Tea Ice Cream", calories: 190 }, redBeanPaste: { name: "Red Bean Paste", calories: 128 }, chocolateMousse: { name: "Chocolate Mousse", calories: 215 }, pannaCotta: { name: "Panna Cotta", calories: 230 }, cremeBrulee: { name: "Creme Brulee", calories: 290 }, flan: { name: "Flan", calories: 220 }, caramelPudding: { name: "Caramel Pudding", calories: 210 }, chocolateBrownie: { name: "Chocolate Brownie", calories: 466 }, lemonTart: { name: "Lemon Tart", calories: 300 }, fruitTart: { name: "Fruit Tart", calories: 260 }, appleCrumble: { name: "Apple Crumble", calories: 240 }, bananaBread: { name: "Banana Bread", calories: 310 }, pumpkinSoup: { name: "Pumpkin Soup", calories: 45 }, tomatoSoup: { name: "Tomato Soup", calories: 30 }, vegetableSoupCreamy: { name: "Vegetable Soup Creamy", calories: 60 }, chickenNoodleSoup: { name: "Chicken Noodle Soup", calories: 70 }, beefStewChunky: { name: "Beef Stew Chunky", calories: 190 }, clamChowderCreamy: { name: "Clam Chowder Creamy", calories: 180 }, lobsterBisqueCreamy: { name: "Lobster Bisque Creamy", calories: 200 }, minestrone: { name: "Minestrone", calories: 90 }, ratatouille: { name: "Ratatouille", calories: 80 }, gazpacho: { name: "Gazpacho", calories: 35 }, tabbouleh: { name: "Tabbouleh", calories: 120 }, falafelBalls: { name: "Falafel Balls", calories: 333 }, hummusDip: { name: "Hummus Dip", calories: 166 }, guacamoleDip: { name: "Guacamole Dip", calories: 160 }, babaGhanoush: { name: "Baba Ghanoush", calories: 150 }, pitaBreadMini: { name: "Pita Bread Mini", calories: 275 }, naanGarlic: { name: "Naan Garlic", calories: 270 }, chapati: { name: "Chapati", calories: 240 }, roti: { name: "Roti", calories: 250 }, tortillaCorn: { name: "Tortilla Corn", calories: 218 }, tortillaFlour: { name: "Tortilla Flour", calories: 290 }, quesadillaCheese: { name: "Quesadilla Cheese", calories: 300 }, burritoBeef: { name: "Burrito Beef", calories: 320 }, burritoChicken: { name: "Burrito Chicken", calories: 300 }, enchiladasCheese: { name: "Enchiladas Cheese", calories: 300 }, tamalesCorn: { name: "Tamales Corn", calories: 250 }, tamalesPork: { name: "Tamales Pork", calories: 280 }, nachosCheese: { name: "Nachos Cheese", calories: 420 }, nachosBeef: { name: "Nachos Beef", calories: 450 }, churrosChocolate: { name: "Churros Chocolate", calories: 450 }, churrosSugar: { name: "Churros Sugar", calories: 440 }, fajitasBeef: { name: "Fajitas Beef", calories: 250 }, fajitasChicken: { name: "Fajitas Chicken", calories: 230 }, cevicheFish: { name: "Ceviche Fish", calories: 120 }, cevicheMixed: { name: "Ceviche Mixed", calories: 130 }, clamLinguine: { name: "Clam Linguine", calories: 180 }, shrimpScampi: { name: "Shrimp Scampi", calories: 210 }, seafoodPaella: { name: "Seafood Paella", calories: 180 }, seafoodRisotto: { name: "Seafood Risotto", calories: 190 }, oysterRockefeller: { name: "Oyster Rockefeller", calories: 120 }, crabCakes: { name: "Crab Cakes", calories: 195 }, lobsterRoll: { name: "Lobster Roll", calories: 220 }, crabSoup: { name: "Crab Soup", calories: 160 }, clamSoup: { name: "Clam Soup", calories: 140 }, scallopSeared: { name: "Scallop Seared", calories: 88 }, musselsMarinara: { name: "Mussels Marinara", calories: 86 }, squidFried: { name: "Squid Fried", calories: 92 }, calamariRings: { name: "Calamari Rings", calories: 150 }, anchovyPizza: { name: "Anchovy Pizza", calories: 280 }, prosciuttoPizza: { name: "Prosciutto Pizza", calories: 290 }, margheritaCalzone: { name: "Margherita Calzone", calories: 330 }, pepperoniCalzone: { name: "Pepperoni Calzone", calories: 350 }, vegetableCalzone: { name: "Vegetable Calzone", calories: 320 }, empanadaBeef: { name: "Empanada Beef", calories: 220 }, empanadaChicken: { name: "Empanada Chicken", calories: 210 }, empanadaCheese: { name: "Empanada Cheese", calories: 200 }, baklava: { name: "Baklava", calories: 430 }, kunafa: { name: "Kunafa", calories: 450 }, lokum: { name: "Lokum", calories: 350 }, turkishDelight: { name: "Turkish Delight", calories: 350 }, mochiIceCream: { name: "Mochi Ice Cream", calories: 200 }, dorayakiRedBean: { name: "Dorayaki Red Bean", calories: 250 }, taiyakiCustard: { name: "Taiyaki Custard", calories: 220 }, pavlovaFruit: { name: "Pavlova Fruit", calories: 250 }, macaronChocolate: { name: "Macaron Chocolate", calories: 470 }, tiramisuCoffee: { name: "Tiramisu Coffee", calories: 240 }, crepeChocolate: { name: "Crepe Chocolate", calories: 150 }, crepeStrawberry: { name: "Crepe Strawberry", calories: 140 }, waffleChocolate: { name: "Waffle Chocolate", calories: 291 }, waffleSyrup: { name: "Waffle Syrup", calories: 280 }, pancakeMaple: { name: "Pancake Maple", calories: 227 }, pancakeBanana: { name: "Pancake Banana", calories: 240 }, cerealFlakes: { name: "Cereal Flakes", calories: 379 }, granolaCluster: { name: "Granola Cluster", calories: 471 }, energyBarChocolate: { name: "Energy Bar Chocolate", calories: 400 }, proteinBar: { name: "Protein Bar", calories: 350 }, fruitBar: { name: "Fruit Bar", calories: 120 }, riceCakeChocolate: { name: "Rice Cake Chocolate", calories: 387 }, breadWhite: { name: "Bread White", calories: 265 }, breadWholeWheat: { name: "Bread Whole Wheat", calories: 270 }, breadMultigrain: { name: "Bread Multigrain", calories: 280 }, briocheChocolate: { name: "Brioche Chocolate", calories: 360 }, danishPastryCheese: { name: "Danish Pastry Cheese", calories: 430 }, donutChocolate: { name: "Donut Chocolate", calories: 452 }, donutGlazed: { name: "Donut Glazed", calories: 450 }, croissantButter: { name: "Croissant Butter", calories: 406 }, baguetteClassic: { name: "Baguette Classic", calories: 270 }, baguetteSesame: { name: "Baguette Sesame", calories: 275 }, bagelPlain: { name: "Bagel Plain", calories: 250 }, bagelSesame: { name: "Bagel Sesame", calories: 260 }, muffinChocolate: { name: "Muffin Chocolate", calories: 377 }, muffinBlueberry: { name: "Muffin Blueberry", calories: 380 }, sconePlain: { name: "Scone Plain", calories: 400 }, sconeFruit: { name: "Scone Fruit", calories: 420 }, pretzelSalted: { name: "Pretzel Salted", calories: 380 }, pretzelSweet: { name: "Pretzel Sweet", calories: 400 }, popTartStrawberry: { name: "Pop Tart Strawberry", calories: 400 }, popTartChocolate: { name: "Pop Tart Chocolate", calories: 410 }, iceCreamVanilla: { name: "Ice Cream Vanilla", calories: 207 }, iceCreamChocolate: { name: "Ice Cream Chocolate", calories: 210 }, iceCreamStrawberry: { name: "Ice Cream Strawberry", calories: 190 }, gelatoPistachio: { name: "Gelato Pistachio", calories: 207 }, gelatoChocolate: { name: "Gelato Chocolate", calories: 210 }, gelatoVanilla: { name: "Gelato Vanilla", calories: 205 }, sorbetLemon: { name: "Sorbet Lemon", calories: 120 }, sorbetMango: { name: "Sorbet Mango", calories: 130 }, smoothieBanana: { name: "Smoothie Banana", calories: 120 }, smoothieBerry: { name: "Smoothie Berry", calories: 130 }, smoothieTropical: { name: "Smoothie Tropical", calories: 140 }, latteVanilla: { name: "Latte Vanilla", calories: 130 }, latteCaramel: { name: "Latte Caramel", calories: 135 }, mochaLatte: { name: "Mocha Latte", calories: 210 }, cappuccinoMilk: { name: "Cappuccino Milk", calories: 110 }, espressoSingle: { name: "Espresso Single", calories: 5 }, hotChocolateMilk: { name: "Hot Chocolate Milk", calories: 190 }, icedLatte: { name: "Iced Latte", calories: 150 }, icedMocha: { name: "Iced Mocha", calories: 160 }, icedCappuccino: { name: "Iced Cappuccino", calories: 140 }, matchaLatte: { name: "Matcha Latte", calories: 130 }, chaiLatte: { name: "Chai Latte", calories: 120 }, greenTea: { name: "Green Tea", calories: 2 }, blackTea: { name: "Black Tea", calories: 1 }, herbalTea: { name: "Herbal Tea", calories: 0 }, coffeeBlack: { name: "Coffee Black", calories: 2 }, coffeeAmericano: { name: "Coffee Americano", calories: 5 }, coffeeCappuccino: { name: "Coffee Cappuccino", calories: 110 }, coffeeLatte: { name: "Coffee Latte", calories: 130 }, coffeeMocha: { name: "Coffee Mocha", calories: 210 }, milkshakeVanilla: { name: "Milkshake Vanilla", calories: 210 }, milkshakeChocolate: { name: "Milkshake Chocolate", calories: 230 }, milkshakeStrawberry: { name: "Milkshake Strawberry", calories: 220 } };
+
+    // Elements
+    const startARBtn = document.getElementById("startARBtn");
+    const stopARBtn = document.getElementById("stopARBtn");
+    const video = document.getElementById("foodVideo");
+    const overlay = document.getElementById("overlay");
+    const ctx = overlay.getContext("2d");
+    const arResult = document.getElementById("arResult");
+    const uploadArea = document.getElementById("uploadArea");
+    const foodUpload = document.getElementById("foodUpload");
+    const foodPreview = document.getElementById("foodPreview");
+    const clearAllBtn = document.getElementById("clearAllBtn");
+    const generatePlanBtn = document.getElementById("generatePlanBtn");
+
+    let mobilenetModel;
+    let detector;
+    let stream = null;
+    let animationId = null;
+    let isRecognizing = false;
+
+    // Load models
+    async function loadModels() {
+      const loadingIndicator = startARBtn.querySelector('.loading');
+      loadingIndicator.style.display = 'inline-block';
+      startARBtn.disabled = true;
+      startARBtn.textContent = 'Loading Models...';
+      
+      try {
+        mobilenetModel = await mobilenet.load();
+        detector = await cocoSsd.load();
+        console.log("MobileNet & Coco-SSD loaded");
+        
+        loadingIndicator.style.display = 'none';
+        startARBtn.disabled = false;
+        startARBtn.innerHTML = 'Start Camera Recognition';
+      } catch (error) {
+        console.error("Model loading failed:", error);
+        arResult.innerHTML = '<div class="status-message" style="color: #dc3545;">Model loading failed, please refresh the page</div>';
+        
+        loadingIndicator.style.display = 'none';
+        startARBtn.disabled = false;
+        startARBtn.innerHTML = 'Start Camera Recognition';
+      }
+    }
+
+    // Initialize camera
+    async function initCamera() {
+      try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          arResult.innerHTML = '<div class="status-message" style="color: #dc3545;">Your browser does not support camera function</div>';
+          return false;
+        }
+
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            width: { ideal: 640 },
+            height: { ideal: 480 },
+            facingMode: "user" 
+          } 
+        });
+        video.srcObject = stream;
+        
+        // Wait for video to load
+        await new Promise((resolve) => {
+          video.onloadedmetadata = () => {
+            resolve();
+          };
+        });
+        
+        // Set overlay dimensions
+        overlay.width = video.videoWidth;
+        overlay.height = video.videoHeight;
+        
+        return true;
+      } catch (err) {
+        console.error("Camera access denied or unavailable", err);
+        arResult.innerHTML = '<div class="status-message" style="color: #dc3545;">Unable to access camera, please allow camera permission or use a device with camera</div>';
+        return false;
+      }
+    }
+
+    // Detect frame
+    async function detectFrame() {
+      if (!detector || !isRecognizing) {
+        return;
+      }
+
+      try {
+        const predictions = await detector.detect(video);
+        ctx.clearRect(0, 0, overlay.width, overlay.height);
+
+        let detectedFoods = [];
+        let displayHTML = '';
+
+        predictions.forEach(pred => {
+          const className = pred.class.toLowerCase();
+          if (foodCalories[className]) {
+            const foodInfo = foodCalories[className];
+            const calories = foodInfo.calories;
+
+            // Draw detection box
+            ctx.strokeStyle = "#28a745";
+            ctx.lineWidth = 3;
+            ctx.strokeRect(pred.bbox[0], pred.bbox[1], pred.bbox[2], pred.bbox[3]);
+
+            // Draw label background
+            ctx.fillStyle = "rgba(40, 167, 69, 0.8)";
+            const text = `${foodInfo.name} | ${calories} kcal`;
+            const textWidth = ctx.measureText(text).width;
+            ctx.fillRect(pred.bbox[0], pred.bbox[1] - 25, textWidth + 10, 25);
+
+            // Draw text
+            ctx.fillStyle = "white";
+            ctx.font = "16px Arial";
+            ctx.fillText(text, pred.bbox[0] + 5, pred.bbox[1] - 7);
+
+            detectedFoods.push({name: foodInfo.name, calories});
+          }
+        });
+
+        if (detectedFoods.length > 0) {
+          // Show recognized foods
+          arResult.className = "result-box";
+          displayHTML = `<div class="status-message">Recognized ${detectedFoods.length} food items</div>`;
+          
+          detectedFoods.forEach(food => {
+            displayHTML += `
+              <div class="food-name">${food.name}</div>
+              <div class="calories">${food.calories} kcal/100g</div>
+            `;
+          });
+        } else {
+          // No food recognized
+          arResult.className = "result-box no-food";
+          displayHTML = '<div class="status-message">No food detected, please place food in front of camera</div>';
+        }
+
+        arResult.innerHTML = displayHTML;
+      } catch (error) {
+        console.error("Error during recognition:", error);
+      }
+
+      if (isRecognizing) {
+        animationId = requestAnimationFrame(detectFrame);
+      }
+    }
+
+    // Start AR recognition
+    startARBtn.addEventListener("click", async () => {
+      if (stream) {
+        arResult.innerHTML = '<div class="status-message">Camera is already running...</div>';
+        return;
+      }
+      
+      const confirmStart = confirm("This feature requires camera access. Do you want to continue?");
+      if (!confirmStart) {
+        arResult.innerHTML = '<div class="status-message">Camera access cancelled.</div>';
+        return;
+      }
+      
+      arResult.className = "result-box recognizing";
+      arResult.innerHTML = '<div class="status-message">Starting camera...</div>';
+      
+      const cameraStarted = await initCamera();
+      if (cameraStarted) {
+        isRecognizing = true;
+        startARBtn.disabled = true;
+        stopARBtn.disabled = false;
+        arResult.className = "result-box recognizing";
+        arResult.innerHTML = '<div class="status-message">Recognizing food...</div>';
+        detectFrame();
+      } else {
+        startARBtn.disabled = false;
+      }
+    });
+
+    // Stop AR recognition
+    stopARBtn.addEventListener("click", () => {
+      isRecognizing = false;
+      if (animationId) {
+        cancelAnimationFrame(animationId);
+        animationId = null;
+      }
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+      ctx.clearRect(0, 0, overlay.width, overlay.height);
+      video.srcObject = null;
+      startARBtn.disabled = false;
+      stopARBtn.disabled = true;
+      arResult.className = "result-box";
+      arResult.innerHTML = '<div class="status-message">Recognition stopped, click "Start Camera Recognition" to restart.</div>';
+    });
+
+    // Upload image recognition function
+    async function recognizeFood(file) {
+      if (!file) return;
+
+      const container = document.createElement("div");
+      container.className = "food-item";
+      
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "delete-btn";
+      deleteBtn.textContent = "×";
+      deleteBtn.addEventListener("click", () => container.remove());
+
+      const img = document.createElement("img");
+      img.src = URL.createObjectURL(file);
+
+      const foodInfo = document.createElement("div");
+      foodInfo.className = "food-info";
+      
+      const result = document.createElement("div");
+      result.className = "food-item-name";
+      result.textContent = "Recognizing...";
+
+      const calories = document.createElement("div");
+      calories.className = "food-item-calories";
+
+      foodInfo.appendChild(result);
+      foodInfo.appendChild(calories);
+      
+      container.appendChild(deleteBtn);
+      container.appendChild(img);
+      container.appendChild(foodInfo);
+      
+      // Remove default prompt
+      if (foodPreview.querySelector('p')) {
+        foodPreview.innerHTML = '';
+      }
+      
+      foodPreview.appendChild(container);
+
+      img.onload = async () => {
+        if (!mobilenetModel) {
+          result.textContent = "Model loading...";
+          return;
+        }
+        
+        try {
+          const predictions = await mobilenetModel.classify(img);
+          let matchedFood = null;
+
+          for (let i = 0; i < Math.min(3, predictions.length); i++) {
+            const topPrediction = predictions[i].className.toLowerCase();
+            const foundFood = Object.keys(foodCalories).find(food => topPrediction.includes(food));
+            if (foundFood) { 
+              matchedFood = foundFood; 
+              break; 
+            }
+          }
+
+          if (matchedFood) {
+            const foodData = foodCalories[matchedFood];
+            result.textContent = foodData.name;
+            calories.textContent = `${foodData.calories} kcal/100g`;
+            container.style.border = "2px solid #28a745";
+          } else {
+            result.textContent = `Cannot recognize (${predictions[0].className})`;
+            calories.textContent = "Calories unknown";
+            container.style.border = "2px solid #dc3545";
+          }
+        } catch (error) {
+          console.error("Recognition error:", error);
+          result.textContent = "Recognition failed";
+          calories.textContent = "Please try again";
+          container.style.border = "2px solid #dc3545";
+        }
+      };
+    }
+
+    // Upload area events
+    uploadArea.addEventListener("click", () => {
+      foodUpload.click();
+    });
+
+    foodUpload.addEventListener("change", e => {
+      Array.from(e.target.files).forEach(file => recognizeFood(file));
+      foodUpload.value = '';
+    });
+
+    uploadArea.addEventListener("dragover", e => { 
+      e.preventDefault(); 
+      uploadArea.classList.add("dragover"); 
+    });
+    
+    uploadArea.addEventListener("dragleave", e => { 
+      e.preventDefault(); 
+      uploadArea.classList.remove("dragover"); 
+    });
+    
+    uploadArea.addEventListener("drop", e => {
+      e.preventDefault();
+      uploadArea.classList.remove("dragover");
+      Array.from(e.dataTransfer.files).forEach(file => recognizeFood(file));
+    });
+
+    clearAllBtn.addEventListener("click", () => {
+      foodPreview.innerHTML = '<p style="grid-column: 1 / -1; text-align: center; color: #666; padding: 20px;">Uploaded images will appear here</p>';
+    });
+
+    // Initialize models
+    loadModels();
+
+    // Food preference selection
+    const preferenceOptions = document.querySelectorAll('.pref-option');
+    let selectedPreferences = [];
+    
+    preferenceOptions.forEach(option => {
+      option.addEventListener('click', function() {
+        const checkbox = this.querySelector('input');
+        checkbox.checked = !checkbox.checked;
+        
+        if (checkbox.checked) {
+          this.classList.add('selected');
+          if (!selectedPreferences.includes(checkbox.value)) {
+            selectedPreferences.push(checkbox.value);
+          }
+        } else {
+          this.classList.remove('selected');
+          const index = selectedPreferences.indexOf(checkbox.value);
+          if (index > -1) {
+            selectedPreferences.splice(index, 1);
+          }
+        }
+      });
+    });
+
+    // Generate personalized meal plan
+    generatePlanBtn.addEventListener('click', function() {
+
+    const loadingIndicator = this.querySelector('.loading');
+    const originalText = 'Generate Personalized Meal Plan';
+      
+
+    this.disabled = true;
+
+    this.innerHTML = `Generating... <span class="loading" style="display: inline-block;"></span>`;
+      
+
+    setTimeout(() => {
+    generatePersonalizedMealPlan();
+
+
+    this.disabled = false;
+
+        this.innerHTML = `${originalText} <span class="loading" style="display: none;"></span>`;
+    }, 1500);
+    });
+
+    // Function to generate personalized meal plan based on preferences
+    function generatePersonalizedMealPlan() {
+      // Determine primary preference for meal selection
+      let primaryPreference = 'high-protein'; // Default
+      if (selectedPreferences.includes('vegetarian') || selectedPreferences.includes('vegan')) {
+        primaryPreference = 'vegetarian';
+      } else if (selectedPreferences.includes('low-carb')) {
+        primaryPreference = 'low-carb';
+      }
+      
+      // Generate meals based on preferences
+      const mealPlan = {
+        breakfast: getRandomMeal('breakfast', primaryPreference),
+        lunch: getRandomMeal('lunch', primaryPreference),
+        dinner: getRandomMeal('dinner', primaryPreference),
+        snack: getRandomMeal('snack', primaryPreference)
+      };
+      
+      // Display the personalized meal plan
+      displayPersonalizedMealPlan(mealPlan);
+    }
+
+    // Get a random meal from the database based on type and preference
+    function getRandomMeal(mealType, preference) {
+      const options = foodDatabase[mealType][preference];
+      return options[Math.floor(Math.random() * options.length)];
+    }
+
+    // Display the personalized meal plan
+    function displayPersonalizedMealPlan(mealPlan) {
+      const timeline = $("#mealTimeline");
+      timeline.empty();
+      
+      const mealStructure = [
+        { name: "Breakfast", meal: mealPlan.breakfast, icon: "fa-sun", ratio: 0.25 },
+        { name: "Lunch", meal: mealPlan.lunch, icon: "fa-utensils", ratio: 0.35 },
+        { name: "Snack", meal: mealPlan.snack, icon: "fa-apple-alt", ratio: 0.15 },
+        { name: "Dinner", meal: mealPlan.dinner, icon: "fa-moon", ratio: 0.25 }
+      ];
+      
+      mealStructure.forEach(m => {
+        const mealCalories = Math.round(calculateTargetCalories() * m.ratio);
+        const mealMacros = calculateMealMacros(m.ratio);
+        
+        timeline.append(`
+          <div class="meal-step">
+            <div class="meal-icon"><i class="fas ${m.icon}"></i></div>
+            <div class="meal-content">
+              <img src="${m.meal.img}" alt="${m.meal.name}">
+              <div class="meal-text">
+                <h5>${m.name}: ${m.meal.name}</h5>
+                <ul>${m.meal.items.map(i => `<li>${i}</li>`).join('')}</ul>
+                <div class="macro">Calories: ${mealCalories} kcal | Protein: ${mealMacros.P}g | Carbs: ${mealMacros.C}g | Fat: ${mealMacros.F}g</div>
+              </div>
+            </div>
+          </div>
+        `);
+      });
+      
+      updateCharts(mealStructure);
+    }
+
+    // Calculate target calories based on user parameters
+    function calculateTargetCalories() {
+      const params = new URLSearchParams(window.location.search);
+      const weight = parseFloat(params.get('weight')) || 70;
+      const goalWeight = parseFloat(params.get('goalWeight')) || 65;
+      const currentType = params.get('currentType') || 'Normal';
+      
+      let TDEE_Multiplier = 1.0;
+      if (currentType === 'OW' || currentType === 'Obese') {
+        TDEE_Multiplier = 0.8;
+      } else if (currentType === 'UW') {
+        TDEE_Multiplier = 1.15;
+      } else if (currentType === 'Normal') {
+        const goalType = params.get('goalType') || 'Athletic Build';
+        if (goalType === 'Athletic Build') {
+          TDEE_Multiplier = 1.05;
+        } else if (goalType === 'Toned Physique') {
+          TDEE_Multiplier = 0.95;
+        }
+      }
+      
+      const baseTDEE = 2200;
+      return Math.round(baseTDEE * TDEE_Multiplier / 10) * 10;
+    }
+
+    // Calculate meal macros based on ratio
+    function calculateMealMacros(ratio) {
+      const targetCalories = calculateTargetCalories();
+      const P_CAL_PER_G = 4;
+      const C_CAL_PER_G = 4;
+      const F_CAL_PER_G = 9;
+      
+      // Default macro ratios
+      let MacroRatios = { P: 30, C: 45, F: 25 };
+      
+      // Adjust based on preferences
+      if (selectedPreferences.includes('high-protein')) {
+        MacroRatios = { P: 40, C: 35, F: 25 };
+      } else if (selectedPreferences.includes('low-carb')) {
+        MacroRatios = { P: 35, C: 25, F: 40 };
+      }
+      
+      const targetMacros = {
+        P: Math.round((targetCalories * (MacroRatios.P / 100)) / P_CAL_PER_G),
+        C: Math.round((targetCalories * (MacroRatios.C / 100)) / C_CAL_PER_G),
+        F: Math.round((targetCalories * (MacroRatios.F / 100)) / F_CAL_PER_G),
+      };
+      
+      return {
+        P: Math.round(targetMacros.P * ratio),
+        C: Math.round(targetMacros.C * ratio),
+        F: Math.round(targetMacros.F * ratio)
+      };
+    }
+
+    // Update charts with new data
+    function updateCharts(mealStructure) {
+      const calorieChartData = mealStructure.map(m => Math.round(calculateTargetCalories() * m.ratio));
+      const calorieChartLabels = mealStructure.map(m => m.name);
+      
+      if (window.calorieChartInstance) window.calorieChartInstance.destroy();
+      window.calorieChartInstance = new Chart(document.getElementById("calorieChart"), {
+        type: "bar",
+        data: {
+          labels: calorieChartLabels,
+          datasets: [{ data: calorieChartData, label: "Calories", backgroundColor: "#28a745" }]
+        },
+        options: { plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, title: { display: true, text: 'Calories (kcal)' } } } }
+      });
+      
+      const targetMacros = calculateTotalMacros();
+      
+      if (window.macroChartInstance) window.macroChartInstance.destroy();
+      window.macroChartInstance = new Chart(document.getElementById("macroChart"), {
+        type: "doughnut",
+        data: {
+          labels: ["Protein", "Carbs", "Fat"],
+          datasets: [{
+            data: [targetMacros.P, targetMacros.C, targetMacros.F],
+            backgroundColor: ["#007bff", "#ffc107", "#dc3545"]
+          }]
+        },
+        options: {
+          plugins: {
+            legend: { position: "bottom" },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  const label = context.label || '';
+                  const value = context.parsed;
+                  return `${label}: ${value}g`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Calculate total macros for the day
+    function calculateTotalMacros() {
+      const targetCalories = calculateTargetCalories();
+      const P_CAL_PER_G = 4;
+      const C_CAL_PER_G = 4;
+      const F_CAL_PER_G = 9;
+      
+      // Default macro ratios
+      let MacroRatios = { P: 30, C: 45, F: 25 };
+      
+      // Adjust based on preferences
+      if (selectedPreferences.includes('high-protein')) {
+        MacroRatios = { P: 40, C: 35, F: 25 };
+      } else if (selectedPreferences.includes('low-carb')) {
+        MacroRatios = { P: 35, C: 25, F: 40 };
+      }
+      
+      return {
+        P: Math.round((targetCalories * (MacroRatios.P / 100)) / P_CAL_PER_G),
+        C: Math.round((targetCalories * (MacroRatios.C / 100)) / C_CAL_PER_G),
+        F: Math.round((targetCalories * (MacroRatios.F / 100)) / F_CAL_PER_G),
+      };
+    }
+
+    // Initialize the page with default values
+    $(function () {
+      const params = new URLSearchParams(window.location.search);
+      const weight = parseFloat(params.get('weight')) || 70;
+      const goalWeight = parseFloat(params.get('goalWeight')) || 65;
+      const currentType = params.get('currentType') || 'Normal';
+      const goalType = params.get('goalType') || 'Athletic Build';
+      const intensityLevel = params.get('intensity') || 'Medium';
+      const durationWeeks = params.get('duration') || '8';
+      const diff = weight - goalWeight;
+
+      $("#currentType").text(currentType);
+      $("#goalType").text(goalType);
+      $("#intensity").text(intensityLevel);
+      $("#intensity").removeClass("low medium high").addClass(intensityLevel.toLowerCase());
+      $("#duration").text(`${durationWeeks} weeks`);
+
+      let goalSummaryText = "Maintain your current weight with a balanced and healthy diet";
+      
+      if (currentType === 'OW' || currentType === 'Obese') {
+        goalSummaryText = `Lose ${Math.abs(diff)} kg by accelerating fat loss with a moderate calorie deficit and a high-protein diet.`;
+      }
+      else if (currentType === 'UW') {
+        goalSummaryText = `Gain ${Math.abs(diff)} kg by promoting muscle and weight increase with a calorie surplus and a high-protein diet.`;
+      }
+      else if (currentType === 'Normal') {
+        if (goalType === 'Athletic Build') {
+          goalSummaryText = "Pursue an athletic physique by building muscle with a slight calorie surplus and a high-protein diet.";
+        } else if (goalType === 'Toned Physique') {
+          goalSummaryText = "Achieve a lean, toned look with a slight calorie deficit and a high-protein diet for better definition.";
+        }
+      }
+
+      $("#goalSummary").text(goalSummaryText);
+
+      const targetCalories = calculateTargetCalories();
+      $("#targetCalories").text(`${targetCalories} kcal`);
+
+      const targetMacros = calculateTotalMacros();
+      $("#targetMacrosSummary").text(`${targetMacros.P}g / ${targetMacros.C}g / ${targetMacros.F}g`);
+      
+      
+    });
+  </script>
+</body>
+</html>

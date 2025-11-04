@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Gymnast - Gym Website Template</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Free Website Template" name="keywords">
+    <meta content="Free Website Template" name="description">
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/title.jpg" type="image/png" sizes="32x32">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link href="css/style.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/plan.css">
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+</head>
+
+<body class="bg-white">
+    <!-- Navbar Start -->
+    <div class="container-fluid p-0 nav-bar">
+        <nav class="navbar navbar-expand-lg bg-none navbar-dark py-3">
+            <a href="" class="navbar-brand">
+                <h1 class="m-0 display-4 font-weight-bold text-uppercase text-white">Fatloss</h1>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto p-4 bg-secondary">
+                    <a href="index.html" class="nav-item nav-link">Home</a>
+                    <a href="measurements.html" class="nav-item nav-link">Measurements</a>
+                    <a href="diet.html" class="nav-item nav-link">Diet</a>
+                    <a href="workout.html" class="nav-item nav-link">Workout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5"
+            style="min-height: 400px">
+            <h4 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold">Your Fitness Plan</h4>
+            <div class="d-inline-flex mb-3">
+                <p class="m-0 text-white"><a class="text-white" href="index.html">Home</a></p>
+                <p class="m-0 text-white px-2">/</p>
+                <p class="m-0 text-white">Your Plan</p>
+            </div>
+
+            <a href="pose.html"
+                class="btn btn-lg btn-primary px-5 py-3 mt-2 shadow-lg animate__animated animate__pulse animate__infinite"
+                style="border-radius: 50px;">
+                <i class="fas fa-camera mr-2"></i> Start Live Pose Tracking
+            </a>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <div class="container py-5">
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="plan-card p-4 text-center">
+                    <i class="fas fa-ruler-vertical fa-3x text-primary mb-3"></i>
+                    <h5>Height</h5>
+                    <p class="display-6 fw-bold" id="planHeight">--</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="plan-card p-4 text-center">
+                    <i class="fas fa-weight fa-3x text-success mb-3"></i>
+                    <h5>Current</h5>
+                    <p class="display-6 fw-bold" id="planWeight">-- kg</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="plan-card p-4 text-center">
+                    <div class="progress-ring">
+                        <svg>
+                            <defs>
+                                <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                    <stop offset="0%" stop-color="#667eea" />
+                                    <stop offset="100%" stop-color="#764ba2" />
+                                </linearGradient>
+                            </defs>
+                            <circle class="bg" cx="70" cy="70" r="50"></circle>
+                            <circle class="fg" cx="70" cy="70" r="50"></circle>
+                        </svg>
+                        <div class="position-absolute">
+                            <div id="progressPercent">0%</div>
+                        </div>
+                    </div>
+                    <h5 class="mt-3">Progress</h5>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="plan-card p-4 text-center">
+                    <i class="fas fa-bullseye fa-3x text-warning mb-3"></i>
+                    <h5>Goal</h5>
+                    <p class="display-6 fw-bold" id="planGoalWeight">-- kg</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <div class="plan-card p-4">
+                    <h4>BMI Index</h4>
+                    <div class="d-flex align-items-center justify-content-between">
+                        <span class="display-5 fw-bold" id="planBMI">--</span>
+                        <span class="bmi-badge" id="bmiBadge">Normal</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="plan-card p-4">
+                    <h4>Body Transformation</h4>
+                    <p class="lead"><span id="planCurrentType">Normal</span> → <span id="planGoalType">Athletic</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-6">
+                <a href="personal_workout.html"
+                    class="plan-card p-4 text-center text-dark text-decoration-none d-block">
+                    <i class="fas fa-dumbbell fa-3x mb-3"></i>
+                    <h3>Weekly Workout</h3>
+                    <p>Click to see plan</p>
+                </a>
+            </div>
+            <div class="col-md-6">
+                <a href="personal_diet.html"
+                    class="plan-card p-4 text-center text-dark text-decoration-none d-block">
+                    <i class="fas fa-utensils fa-3x mb-3"></i>
+                    <h3>Daily Nutrition</h3>
+                    <p>Click for meals</p>
+                </a>
+            </div>
+        </div>
+
+        <div class="quote-slider mb-5">
+            <h4>"The only bad workout is the one that didn't happen."</h4>
+            <p class="text-muted">- Unknown</p>
+        </div>
+    </div>
+
+    <div class="footer container-fluid mt-5 py-5 px-sm-3 px-md-5 text-white">
+        <div class="container border-top border-dark pt-5">
+            <p class="m-0 text-center text-white">
+                &copy; <a class="text-white font-weight-bold" href="#">Fatloss</a> All Rights Reserved.
+            </p>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <a href="#" class="btn btn-outline-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <!-- JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Read URL params
+        const params = new URLSearchParams(window.location.search);
+
+        const height = params.get('height');
+        const weight = parseFloat(params.get('weight'));
+        const bmi = params.get('bmi');
+        const goalWeight = parseFloat(params.get('goalWeight'));
+        const currentType = params.get('currentType') || 'Unknown';
+        const goalType = params.get('goalType') || 'Unknown';
+
+        if (height && weight && bmi) {
+            document.getElementById('planHeight').textContent = height + ' cm';
+            document.getElementById('planWeight').textContent = weight + ' kg';
+            document.getElementById('planBMI').textContent = bmi;
+            document.getElementById('planGoalWeight').textContent = goalWeight + ' kg';
+            document.getElementById('planCurrentType').textContent = currentType;
+            document.getElementById('planGoalType').textContent = goalType;
+
+            // 修复进度条
+            const initialWeight = parseFloat(localStorage.getItem('initialWeight')) || weight;
+            localStorage.setItem('initialWeight', initialWeight);
+
+            let progress = 0;
+            if (goalWeight < initialWeight) {
+                progress = ((initialWeight - weight) / (initialWeight - goalWeight)) * 100;
+            } else if (goalWeight > initialWeight) {
+                progress = ((weight - initialWeight) / (goalWeight - initialWeight)) * 100;
+            } else {
+                progress = 100;
+            }
+
+            progress = Math.max(0, Math.min(progress, 100));
+
+            const circumference = 314;
+            const offset = circumference - (progress / 100) * circumference;
+            document.querySelector('.fg').style.strokeDashoffset = offset;
+            document.getElementById('progressPercent').textContent = progress.toFixed(0) + '%';
+
+            // BMI Badge
+            const bmiNum = parseFloat(bmi);
+            const badge = document.getElementById('bmiBadge');
+            if (bmiNum < 18.5) { badge.className = 'bmi-badge bg-danger'; badge.textContent = 'Underweight'; }
+            else if (bmiNum < 25) { badge.className = 'bmi-badge bg-success'; badge.textContent = 'Normal'; }
+            else if (bmiNum < 30) { badge.className = 'bmi-badge bg-warning'; badge.textContent = 'Overweight'; }
+            else { badge.className = 'bmi-badge bg-danger'; badge.textContent = 'Obese'; }
+
+            // 动态生成跳转 URL
+            const workoutLink = document.querySelector('a[href="personal_workout.html"]');
+            const dietLink = document.querySelector('a[href="personal_diet.html"]');
+
+            const queryString = `?height=${height}&weight=${weight}&bmi=${bmi}&goalWeight=${goalWeight}&currentType=${currentType}&goalType=${goalType}`;
+
+            if (workoutLink) workoutLink.href = 'personal_workout.html' + queryString;
+            if (dietLink) dietLink.href = 'personal_diet.html' + queryString;
+        }
+    </script>
+
+    <style>
+        .progress-ring {
+            position: relative;
+            width: 140px;
+            height: 140px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-ring svg {
+            width: 140px;
+            height: 140px;
+            transform: rotate(-90deg);
+        }
+
+        .progress-ring circle {
+            fill: none;
+            stroke-width: 10;
+            stroke-linecap: round;
+        }
+
+        .progress-ring .bg {
+            stroke: #e9ecef;
+        }
+
+        .progress-ring .fg {
+            stroke: url(#gradient);
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transition: stroke-dashoffset 1.2s ease-out;
+        }
+
+        .progress-ring .position-absolute {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: #333;
+        }
+    </style>
+</body>
+</html>

@@ -1,0 +1,75 @@
+/* Custom styles for the body measurement form */
+#bodyMeasurementsForm .form-label {
+    font-weight: 600;
+    color: #333;
+}
+
+#bodyMeasurementsForm .form-control,
+#bodyMeasurementsForm .form-select {
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-size: 1rem;
+}
+
+#bodyMeasurementsForm .form-control[readonly] {
+    background-color: #f8f9fa;
+    color: #555;
+    cursor: not-allowed;
+}
+
+#bodyMeasurementsForm .form-text {
+    color: #6c757d;
+    font-size: 0.875rem;
+}
+
+#bodyMeasurementsForm .btn-check + .btn {
+    padding: 10px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+#bodyMeasurementsForm .btn-check:checked + .btn {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+#bodyMeasurementsForm .btn-check + .btn:hover {
+    background-color: #e7f1ff;
+    border-color: #0d6efd;
+}
+
+#bodyMeasurementsForm .btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 14px;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+#bodyMeasurementsForm .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Feature cards icons */
+.flaticon-barbell,
+.flaticon-medal {
+    font-size: 3.5rem;
+    line-height: 1;
+}
+
+.photo {
+    margin-left: -70px;
+    border-radius: 10px;
+    transform: scale(1.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .row.g-2 .col-6 {
+        width: 50%;
+    }
+}

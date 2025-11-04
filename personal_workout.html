@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Fatloss - Workout Plan</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <!-- Favicon -->
+    <link rel="icon" href="img/title.jpg" type="image/png" sizes="32x32">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+    <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
+    <link href="css/style.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #f6f8fa, #e9eff5);
+            font-family: "Poppins", sans-serif;
+        }
+
+        .nav-bar {
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .page-header {
+            background: linear-gradient(120deg, #dc3545, #6610f2);
+            box-shadow: inset 0 0 120px rgba(0, 0, 0, 0.2);
+        }
+
+        .gym-class-box {
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .gym-class-box:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-gradient {
+            background: linear-gradient(90deg, #ff4d4d, #ff8585);
+            color: #fff !important;
+            border: none;
+            border-radius: 50px;
+            transition: all 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn-gradient:hover {
+            background: linear-gradient(90deg, #ff6666, #ff9999);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 77, 77, 0.3);
+        }
+
+        .table {
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+
+        .table thead th {
+            background-color: #343a40;
+            color: #fff;
+            border: none;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .table tbody tr {
+            background: #fff;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .table tbody tr:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .table tbody td {
+            vertical-align: middle !important;
+            border-top: none;
+            padding: 16px;
+        }
+
+        .highlight-today {
+            background: linear-gradient(90deg, #ff4d4d, #ff8585) !important;
+            color: #fff !important;
+            font-weight: 600;
+            border-left: 6px solid #dc3545;
+        }
+
+        .badge {
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #fff !important;
+        }
+
+
+        @media (max-width: 768px) {
+            h4.display-4 {
+                font-size: 2rem;
+            }
+        }
+
+        
+        .plan-extra-info {
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <!-- Navbar Start -->
+    <div class="container-fluid p-0 nav-bar">
+        <nav class="navbar navbar-expand-lg bg-none navbar-dark py-3">
+            <a href="" class="navbar-brand">
+                <h1 class="m-0 display-4 font-weight-bold text-uppercase text-white">Fatloss</h1>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto p-4 bg-secondary">
+                    <a href="index.html" class="nav-item nav-link">Home</a>
+                    <a href="measurements.html" class="nav-item nav-link">Measurements</a>
+                    <a href="personal_diet.html" class="nav-item nav-link">Diet plan</a>
+                    <a href="personal_workout.html" class="nav-item nav-link active">Workout plan</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Navbar End -->
+
+    <!-- Page Header Start -->
+    <div class="container-fluid page-header mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center" style="min-height: 400px">
+            <h4 class="display-4 mb-3 mt-lg-5 text-white text-uppercase font-weight-bold">Workout Plan</h4>
+            <div class="d-inline-flex text-white">
+                <p class="m-0"><a class="text-white" href="index.html">Home</a></p>
+                <p class="m-0 px-2">/</p>
+                <p class="m-0">Workout Plan</p>
+            </div>
+        </div>
+    </div>
+    <!-- Page Header End -->
+
+    <div class="container gym-feature py-5">
+        <div class="text-center mb-5">
+            <h4 class="text-primary font-weight-bold" id="personalizedPlanTitle">Your Training Plan</h4>
+            <p class="text-muted" id="planSummary">Loading personalized plan...</p>
+            <p class="plan-extra-info text-muted" id="planExtra"></p>
+        </div>
+
+        <div class="text-center mb-5">
+            <a href="pose.html" class="btn btn-lg btn-gradient px-5 py-3 shadow">
+                <i class="fas fa-camera mr-2"></i> Start Workout
+            </a>
+        </div>
+
+        <div class="tab-class">
+            <ul class="nav nav-pills justify-content-center mb-4">
+                <li class="nav-item"><a class="nav-link active" data-toggle="pill" href="#plan-fatloss">Current Plan</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div id="plan-fatloss" class="container tab-pane active p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Workout</th>
+                                    <th>Duration</th>
+                                    <th>Focus</th>
+                                </tr>
+                            </thead>
+                            <tbody id="workoutPlanBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer container-fluid mt-5 py-5 px-sm-3 px-md-5 text-white">
+        <div class="container border-top border-dark pt-5">
+            <p class="m-0 text-center text-white">
+                &copy; <a class="text-white font-weight-bold" href="#">Fatloss</a> All Rights Reserved.
+            </p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(function () {
+            const params = new URLSearchParams(window.location.search);
+            const weight = parseFloat(params.get('weight')) || 70;
+            const goalWeight = parseFloat(params.get('goalWeight')) || 65;
+            const currentType = params.get('currentType') || 'Normal';
+            const goalType = params.get('goalType') || 'Normal Build';
+            const diff = weight - goalWeight;
+            const workoutPlanBody = document.getElementById('workoutPlanBody');
+
+            // 设置标题和描述
+            document.getElementById('personalizedPlanTitle').textContent = `Plan for ${currentType} → ${goalType}`;
+            document.getElementById('planSummary').textContent = diff > 0
+                ? `Goal: Lose ${Math.abs(diff)} kg while transitioning from ${currentType} to ${goalType}.`
+                : diff < 0
+                    ? `Goal: Gain ${Math.abs(diff)} kg to develop a ${goalType}.`
+                    : `Goal: Maintain and improve fitness toward ${goalType}.`;
+
+            const planExtra = document.getElementById('planExtra');
+
+            // 强度 & 周期逻辑
+            let intensity = "Medium 🔥";
+            let weeks = 8;
+
+            if (currentType === "Obese") {
+                intensity = "Medium 🔥";
+                weeks = 16;
+            } else if (currentType === "OW") {
+                intensity = "Medium-High 🔥🔥";
+                weeks = 12;
+            } else if (currentType === "Normal" && goalType === "Athletic Build") {
+                intensity = "High 🔥🔥🔥";
+                weeks = 10;
+            } else if (currentType === "Normal" && goalType === "Toned Physique") {
+                intensity = "Medium 🔥";
+                weeks = 8;
+            } else if (currentType === "UW") {
+                intensity = "High 🔥🔥";
+                weeks = 10;
+            } else {
+                intensity = "Low 🔥";
+                weeks = 6;
+            }
+
+            planExtra.innerHTML = `🔥 <strong>Intensity:</strong> ${intensity} &nbsp;&nbsp;&nbsp; ⏳ <strong>Duration:</strong> ${weeks} weeks`;
+
+            // 个性化训练计划
+            function generatePlan(current, goal) {
+                if (current === "Obese") return [
+                    { day: 1, name: "Monday", workout: "Low-Impact Cardio", duration: "40 mins", focus: "Walking / Cycling", badge: "badge-info" },
+                    { day: 2, name: "Tuesday", workout: "Full Body Strength", duration: "45 mins", focus: "Bodyweight", badge: "badge-primary" },
+                    { day: 3, name: "Wednesday", workout: "Active Recovery", duration: "30 mins", focus: "Stretch, Yoga", badge: "badge-secondary" },
+                    { day: 4, name: "Thursday", workout: "HIIT Beginner", duration: "30 mins", focus: "Fat Burn", badge: "badge-danger" },
+                    { day: 5, name: "Friday", workout: "Core Stability", duration: "35 mins", focus: "Abs, Posture", badge: "badge-warning" },
+                    { day: 6, name: "Saturday", workout: "Cardio Mix", duration: "50 mins", focus: "Endurance", badge: "badge-success" },
+                    { day: 0, name: "Sunday", workout: "Rest", duration: "-", focus: "Recovery", badge: "badge-dark", isRest: true }
+                ];
+
+                if (current === "OW") return [
+                    { day: 1, name: "Monday", workout: "HIIT + Core", duration: "45 mins", focus: "Fat Burn", badge: "badge-danger" },
+                    { day: 2, name: "Tuesday", workout: "Strength: Upper", duration: "50 mins", focus: "Push/Pull", badge: "badge-primary" },
+                    { day: 3, name: "Wednesday", workout: "Mobility & Yoga", duration: "30 mins", focus: "Recovery", badge: "badge-info" },
+                    { day: 4, name: "Thursday", workout: "Strength: Lower", duration: "55 mins", focus: "Legs, Glutes", badge: "badge-warning" },
+                    { day: 5, name: "Friday", workout: "Full Body Circuit", duration: "45 mins", focus: "Endurance", badge: "badge-success" },
+                    { day: 6, name: "Saturday", workout: "Cardio + Core", duration: "40 mins", focus: "Balance", badge: "badge-secondary" },
+                    { day: 0, name: "Sunday", workout: "Rest", duration: "-", focus: "Recovery", badge: "badge-dark", isRest: true }
+                ];
+
+                if (current === "Normal" && goal === "Athletic Build") return [
+                    { day: 1, name: "Monday", workout: "Push Day", duration: "60 mins", focus: "Chest, Shoulders", badge: "badge-primary" },
+                    { day: 2, name: "Tuesday", workout: "Pull Day", duration: "60 mins", focus: "Back, Biceps", badge: "badge-secondary" },
+                    { day: 3, name: "Wednesday", workout: "Cardio + Core", duration: "40 mins", focus: "Endurance", badge: "badge-info" },
+                    { day: 4, name: "Thursday", workout: "Leg Day", duration: "70 mins", focus: "Quads, Glutes", badge: "badge-warning" },
+                    { day: 5, name: "Friday", workout: "Power & Conditioning", duration: "45 mins", focus: "Explosiveness", badge: "badge-success" },
+                    { day: 6, name: "Saturday", workout: "Flexibility", duration: "40 mins", focus: "Mobility", badge: "badge-info" },
+                    { day: 0, name: "Sunday", workout: "Rest", duration: "-", focus: "Recovery", badge: "badge-dark", isRest: true }
+                ];
+
+                if (current === "Normal" && goal === "Toned Physique") return [
+                    { day: 1, name: "Monday", workout: "Full Body Sculpt", duration: "50 mins", focus: "Tone", badge: "badge-success" },
+                    { day: 2, name: "Tuesday", workout: "Cardio Intervals", duration: "45 mins", focus: "Fat Burn", badge: "badge-danger" },
+                    { day: 3, name: "Wednesday", workout: "Yoga & Core", duration: "40 mins", focus: "Stability", badge: "badge-info" },
+                    { day: 4, name: "Thursday", workout: "Upper Strength", duration: "50 mins", focus: "Arms, Back", badge: "badge-primary" },
+                    { day: 5, name: "Friday", workout: "Lower Strength", duration: "55 mins", focus: "Legs, Core", badge: "badge-warning" },
+                    { day: 6, name: "Saturday", workout: "Cardio & Stretch", duration: "40 mins", focus: "Recovery", badge: "badge-secondary" },
+                    { day: 0, name: "Sunday", workout: "Rest", duration: "-", focus: "Restoration", badge: "badge-dark", isRest: true }
+                ];
+
+                if (current === "UW") return [
+                    { day: 1, name: "Monday", workout: "Strength: Push", duration: "60 mins", focus: "Chest, Shoulders", badge: "badge-primary" },
+                    { day: 2, name: "Tuesday", workout: "Strength: Pull", duration: "60 mins", focus: "Back, Arms", badge: "badge-secondary" },
+                    { day: 3, name: "Wednesday", workout: "Active Rest", duration: "30 mins", focus: "Mobility", badge: "badge-info" },
+                    { day: 4, name: "Thursday", workout: "Leg Power", duration: "70 mins", focus: "Lower Body", badge: "badge-warning" },
+                    { day: 5, name: "Friday", workout: "Core & Conditioning", duration: "45 mins", focus: "Abs, Balance", badge: "badge-success" },
+                    { day: 6, name: "Saturday", workout: "Cardio Low Intensity", duration: "30 mins", focus: "Recovery", badge: "badge-secondary" },
+                    { day: 0, name: "Sunday", workout: "Rest", duration: "-", focus: "Recovery", badge: "badge-dark", isRest: true }
+                ];
+
+                // 默认计划
+                return [
+                    { day: 1, name: "Monday", workout: "Full Body Strength", duration: "50 mins", focus: "Balance", badge: "badge-primary" },
+                    { day: 2, name: "Tuesday", workout: "Cardio", duration: "40 mins", focus: "Endurance", badge: "badge-success" },
+                    { day: 3, name: "Wednesday", workout: "Core & Flexibility", duration: "35 mins", focus: "Core", badge: "badge-info" },
+                    { day: 4, name: "Thursday", workout: "Strength Focus", duration: "55 mins", focus: "Major Muscles", badge: "badge-warning" },
+                    { day: 5, name: "Friday", workout: "Conditioning", duration: "45 mins", focus: "Functional", badge: "badge-success" },
+                    { day: 6, name: "Saturday", workout: "Light Cardio", duration: "40 mins", focus: "Active Rest", badge: "badge-secondary" },
+                    { day: 0, name: "Sunday", workout: "Rest", duration: "-", focus: "Recovery", badge: "badge-dark", isRest: true }
+                ];
+            }
+
+            const plan = generatePlan(currentType, goalType);
+
+            // 显示表格
+            const today = new Date().getDay();
+            workoutPlanBody.innerHTML = plan.map(item => `
+                <tr class="${item.day === today ? 'highlight-today' : ''}">
+                    <td>${item.name}</td>
+                    <td><span class="badge ${item.badge}">${item.workout}</span></td>
+                    <td>${item.duration}</td>
+                    <td>${item.focus}</td>
+                </tr>
+            `).join('');
+        });
+    </script>
+</body>
+</html>

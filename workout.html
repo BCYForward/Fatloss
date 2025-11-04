@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Fatloss - Workout Plan</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Workout Plan Template" name="keywords">
+    <meta content="Personalized Workout Plan" name="description">
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/title.jpg" type="image/png" sizes="32x32">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
+
+    <link href="css/style.min.css" rel="stylesheet">
+    
+    <style>
+        /* Highlight for today's workout on a light background */
+        .highlight-today {
+            background-color: red !important; /* Light orange/peach shade for visibility */
+            font-weight: bold;
+            color: #212529 !important; /* Dark text for contrast */
+            border-left: 5px solid #ff6f61; /* Primary color border */
+        }
+        /* Ensure alternating rows are clear (using bg-light) */
+        .table tbody tr:nth-child(even) {
+            background-color: #f8f9fa; /* Bootstrap's bg-light */
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <div class="container-fluid p-0 nav-bar">
+        <nav class="navbar navbar-expand-lg bg-none navbar-dark py-3">
+            <a href="" class="navbar-brand">
+                <h1 class="m-0 display-4 font-weight-bold text-uppercase text-white">Fatloss</h1>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto p-4 bg-secondary">
+                    <a href="index.html" class="nav-item nav-link">Home</a>
+                    <a href="measurements.html" class="nav-item nav-link">Measurements</a>
+                    <a href="diet.html" class="nav-item nav-link">Diet</a>
+                    <a href="workout.html" class="nav-item nav-link active">Workout</a>           
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container-fluid page-header mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+            <h4 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold">Workout</h4>
+            <div class="d-inline-flex">
+                <p class="m-0 text-white"><a class="text-white" href="">Home</a></p>
+                <p class="m-0 text-white px-2">/</p>
+                <p class="m-0 text-white">Workout</p>
+            </div>
+        </div>
+    </div>
+    <div class="container gym-class mb-5" style="margin-top: 90px;">
+        <div class="row px-3">
+            <div class="col-md-6 p-0">
+                <div class="gym-class-box d-flex flex-column align-items-end justify-content-center bg-primary text-right text-white py-5 px-5">
+                    <i class="flaticon-six-pack"></i>
+                    <h3 class="display-4 mb-3 text-white font-weight-bold">Fat Loss Program</h3>
+                    <p>
+                        High-intensity interval and functional training to burn fat efficiently while keeping lean muscle.
+                        Ideal for those aiming to reduce body fat and improve cardiovascular endurance.
+                    </p>
+                    <a href="measurements.html" class="btn btn-lg btn-outline-light mt-4 px-4">Get Plan</a>
+                </div>
+            </div>
+            <div class="col-md-6 p-0">
+                <div class="gym-class-box d-flex flex-column align-items-start justify-content-center bg-secondary text-left text-white py-5 px-5">
+                    <i class="flaticon-bodybuilding"></i>
+                    <h3 class="display-4 mb-3 text-white font-weight-bold">Muscle Gain Program</h3>
+                    <p>
+                        A progressive resistance plan combining compound lifts and hypertrophy techniques to help you gain
+                        strength and size while keeping body fat low.
+                    </p>
+                    <a href="measurements.html" class="btn btn-lg btn-outline-light mt-4 px-4">Get Plan</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container gym-feature py-5">
+        <div class="d-flex flex-column text-center mb-5">
+            <h4 class="text-primary font-weight-bold">Weekly Workout Schedule</h4>
+            <h4 class="display-4 font-weight-bold">General Training Plan</h4>
+        </div>
+        <div class="tab-class">
+            <ul class="nav nav-pills justify-content-center mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="pill" href="#plan-fatloss">Fat Loss</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#plan-muscle">Muscle Gain</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#plan-shape">Body Shaping</a>
+                </li>
+            </ul>
+            <div class="tab-content">
+
+                <div id="plan-fatloss" class="container tab-pane p-0 active">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-lg m-0 text-center">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Workout</th>
+                                    <th>Duration</th>
+                                    <th>Focus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="day-1-fatloss" data-day="1"><td>Monday</td><td>HIIT Cardio Core</td><td>45 mins</td><td><span class="badge badge-danger">Fat Burn</span></td></tr>
+                                <tr id="day-2-fatloss" data-day="2" class="bg-light"><td>Tuesday</td><td>Upper Body Circuit</td><td>50 mins</td><td><span class="badge badge-success">Lean Strength</span></td></tr>
+                                <tr id="day-3-fatloss" data-day="3"><td>Wednesday</td><td>Yoga Flow</td><td>30 mins</td><td><span class="badge badge-info">Mobility</span></td></tr>
+                                <tr id="day-4-fatloss" data-day="4" class="bg-light"><td>Thursday</td><td>Leg Power Endurance</td><td>50 mins</td><td><span class="badge badge-warning">Lower Body</span></td></tr>
+                                <tr id="day-5-fatloss" data-day="5"><td>Friday</td><td>Full Body HIIT</td><td>40 mins</td><td><span class="badge badge-danger">Cardio Power</span></td></tr>
+                                <tr id="day-6-fatloss" data-day="6" class="bg-light"><td>Saturday</td><td>Core Stability</td><td>30 mins</td><td><span class="badge badge-primary">Balance</span></td></tr>
+                                <tr id="day-7-fatloss" data-day="0" class="bg-dark text-white"><td>Sunday</td><td>Rest</td><td>-</td><td><span class="badge badge-light text-dark">Recovery</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="plan-muscle" class="container tab-pane fade p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-lg m-0 text-center">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Workout</th>
+                                    <th>Duration</th>
+                                    <th>Focus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="day-1-muscle" data-day="1"><td>Monday</td><td>Chest Triceps</td><td>75 mins</td><td><span class="badge badge-success">Hypertrophy</span></td></tr>
+                                <tr id="day-2-muscle" data-day="2" class="bg-light"><td>Tuesday</td><td>Back Biceps</td><td>75 mins</td><td><span class="badge badge-success">Strength</span></td></tr>
+                                <tr id="day-3-muscle" data-day="3"><td>Wednesday</td><td>Legs</td><td>80 mins</td><td><span class="badge badge-success">Compound Lifts</span></td></tr>
+                                <tr id="day-4-muscle" data-day="4" class="bg-light"><td>Thursday</td><td>Shoulders Abs</td><td>60 mins</td><td><span class="badge badge-warning">Definition</span></td></tr>
+                                <tr id="day-5-muscle" data-day="5"><td>Friday</td><td>PushPull Combo</td><td>70 mins</td><td><span class="badge badge-primary">Endurance</span></td></tr>
+                                <tr id="day-6-muscle" data-day="6" class="bg-light"><td>Saturday</td><td>Active Recovery</td><td>40 mins</td><td><span class="badge badge-info">Mobility</span></td></tr>
+                                <tr id="day-7-muscle" data-day="0" class="bg-dark text-white"><td>Sunday</td><td>Rest</td><td>-</td><td><span class="badge badge-light text-dark">Recovery</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="plan-shape" class="container tab-pane fade p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-lg m-0 text-center">
+                            <thead class="bg-secondary text-white">
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Workout</th>
+                                    <th>Duration</th>
+                                    <th>Focus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr id="day-1-shape" data-day="1"><td>Monday</td><td>Full Body Sculpt</td><td>60 mins</td><td><span class="badge badge-primary">Balance</span></td></tr>
+                                <tr id="day-2-shape" data-day="2" class="bg-light"><td>Tuesday</td><td>Pilates Flow</td><td>45 mins</td><td><span class="badge badge-info">Flexibility</span></td></tr>
+                                <tr id="day-3-shape" data-day="3"><td>Wednesday</td><td>Cardio Dance</td><td>40 mins</td><td><span class="badge badge-danger">Fat Burn</span></td></tr>
+                                <tr id="day-4-shape" data-day="4" class="bg-light"><td>Thursday</td><td>Lower Sculpt</td><td>50 mins</td><td><span class="badge badge-warning">Glutes Legs</span></td></tr>
+                                <tr id="day-5-shape" data-day="5"><td>Friday</td><td>Upper Sculpt</td><td>50 mins</td><td><span class="badge badge-warning">Arms Shoulders</span></td></tr>
+                                <tr id="day-6-shape" data-day="6" class="bg-light"><td>Saturday</td><td>Yoga Recovery</td><td>40 mins</td><td><span class="badge badge-info">Mobility</span></td></tr>
+                                <tr id="day-7-shape" data-day="0" class="bg-dark text-white"><td>Sunday</td><td>Rest</td><td>-</td><td><span class="badge badge-light text-dark">Relax</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer container-fluid mt-5 py-5 px-sm-3 px-md-5 text-white">
+        <div class="container border-top border-dark pt-5">
+            <p class="m-0 text-center text-white">
+                &copy; <a class="text-white font-weight-bold" href="#">Fatloss</a> All Rights Reserved.
+            </p>
+        </div>
+    </div>
+
+    <a href="#" class="btn btn-outline-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        function highlightCurrentDay() {
+            // Get today's day number (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+            const todayIndex = new Date().getDay();
+
+            // Select all rows with a data-day attribute from all plans
+            const allPlanRows = document.querySelectorAll('#plan-fatloss tr[data-day], #plan-muscle tr[data-day], #plan-shape tr[data-day]');
+
+            // Loop through all rows and apply the highlight-today class to the row matching today's day
+            allPlanRows.forEach(row => {
+                // Get the day value from the data-day attribute
+                const rowDay = parseInt(row.getAttribute('data-day'));
+
+                // Check if the row's day matches today's index
+                if (rowDay === todayIndex) {
+                    row.classList.add('highlight-today');
+                }
+            });
+        }
+
+        // Run the function when the page is fully loaded
+        // Note: Using jQuery's document ready as the original template relies on jQuery
+        $(document).ready(function() {
+            highlightCurrentDay();
+        });
+    </script>
+</body>
+</html>

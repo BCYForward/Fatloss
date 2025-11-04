@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Fatloss - Eating Plan</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="Eating Plan Template" name="keywords">
+    <meta content="Healthy Eating and Meal Prep Plan" name="description">
+
+    <!-- Favicon -->
+    <link rel="icon" href="img/title.jpg" type="image/png" sizes="32x32">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+
+    <link href="lib/flaticon/font/flaticon.css" rel="stylesheet">
+
+    <link href="css/style.min.css" rel="stylesheet">
+    
+    <style>
+        /* Custom Green Theme for Nutrition */
+        :root {
+            --nutrition-primary: #4CAF50; /* Deep Green */
+            --nutrition-secondary: #8BC34A; /* Lighter Green */
+        }
+
+        
+
+        .nutrition-theme-bg-primary {
+            background-color: var(--nutrition-primary) !important;
+        }
+
+        .nutrition-theme-bg-secondary {
+            background-color: var(--nutrition-secondary) !important;
+        }
+
+        .nutrition-theme-text-primary {
+            color: var(--nutrition-primary) !important;
+        }
+        
+        .nutrition-theme-border-primary {
+            border-left: 5px solid var(--nutrition-primary);
+        }
+
+        /* Styling for the planning table */
+        .table thead th {
+            background-color: var(--nutrition-primary) !important;
+            color: white;
+            border-color: #6c757d;
+        }
+        
+        .table tbody tr td {
+            vertical-align: middle;
+        }
+
+        /* Highlight for today's meal plan */
+        .highlight-today {
+            background-color: #fff9c4 !important; /* Very light yellow for food focus */
+            font-weight: bold;
+            color: #212529 !important;
+            border-left: 5px solid var(--nutrition-secondary);
+        }
+    </style>
+</head>
+
+<body class="bg-white">
+    <div class="container-fluid p-0 nav-bar">
+        <nav class="navbar navbar-expand-lg bg-none navbar-dark py-3">
+            <a href="index.html" class="navbar-brand">
+                <h1 class="m-0 display-4 font-weight-bold text-uppercase text-white">Fatloss</h1>
+            </a>
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+                <div class="navbar-nav ml-auto p-4 bg-secondary">
+                    <a href="index.html" class="nav-item nav-link">Home</a>
+                    <a href="measurements.html" class="nav-item nav-link">Measurements</a>
+                    <a href="diet.html" class="nav-item nav-link active">Diet</a>
+                    <a href="workout.html" class="nav-item nav-link">Workout</a>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="container-fluid page-header mb-5">
+        <div class="d-flex flex-column align-items-center justify-content-center pt-0 pt-lg-5" style="min-height: 400px">
+            <h4 class="display-4 mb-3 mt-0 mt-lg-5 text-white text-uppercase font-weight-bold">Diet</h4>
+            <div class="d-inline-flex">
+                <p class="m-0 text-white"><a class="text-white" href="index.html">Home</a></p>
+                <p class="m-0 text-white px-2">/</p>
+                <p class="m-0 text-white">Diet</p>
+            </div>
+        </div>
+    </div>
+    <div class="container gym-class mb-5" style="margin-top: 90px;">
+        <div class="row px-3">
+            <div class="col-md-6 p-0">
+                <div class="gym-class-box d-flex flex-column align-items-end justify-content-center nutrition-theme-bg-primary text-right text-white py-5 px-5">
+                    <i class="flaticon-diet"></i>
+                    <h3 class="display-4 mb-3 text-white font-weight-bold">Healthy Eating Program</h3>
+                    <p>
+                        A balanced nutrition plan focused on whole foods, proper macronutrient ratios, and sustainable habits for long-term fat loss.
+                    </p>
+                    <a href="measurements.html" class="btn btn-lg btn-outline-light mt-4 px-4">Get Started</a>
+                </div>
+            </div>
+            <div class="col-md-6 p-0">
+                <div class="gym-class-box d-flex flex-column align-items-start justify-content-center nutrition-theme-bg-secondary text-left text-white py-5 px-5">
+                    <i class="flaticon-supplement"></i>
+                    <h3 class="display-4 mb-3 text-white font-weight-bold">Meal Prep Focus</h3>
+                    <p>
+                        Practical and efficient recipes designed for batch cooking, ensuring you have healthy meals ready to support your intense workout schedule.
+                    </p>
+                    <a href="measurements.html" class="btn btn-lg btn-outline-light mt-4 px-4">Get Started</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container gym-feature py-5">
+        <div class="d-flex flex-column text-center mb-5">
+            <h4 class="nutrition-theme-text-primary font-weight-bold">Weekly Nutrition Schedule</h4>
+            <h4 class="display-4 font-weight-bold">Your 7-Day Meal Plan</h4>
+        </div>
+        <div class="tab-class">
+            <ul class="nav nav-pills justify-content-center mb-4">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="pill" href="#plan-healthy-eating">Standard Fat Loss</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#plan-vegetarian">Vegetarian Option</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" data-toggle="pill" href="#plan-low-carb">Low Carb Focus</a>
+                </li>
+            </ul>
+            
+            <div class="tab-content">
+                <div id="plan-healthy-eating" class="container tab-pane p-0 active">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-lg m-0 text-center">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Breakfast (300-350 Cal)</th>
+                                    <th>Lunch (400-500 Cal)</th>
+                                    <th>Dinner (450-550 Cal)</th>
+                                    <th>Focus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-day="1"><td>Monday</td><td>Oatmeal with Berries & Nuts</td><td>Grilled Chicken Salad</td><td>Baked Salmon with Roasted Veggies</td><td><span class="badge badge-success">High Protein</span></td></tr>
+                                <tr data-day="2" class="bg-light"><td>Tuesday</td><td>Scrambled Eggs & Avocado</td><td>Turkey Wrap on Whole Wheat</td><td>Lentil Soup with Whole Grain Bread</td><td><span class="badge badge-info">Fiber Rich</span></td></tr>
+                                <tr data-day="3"><td>Wednesday</td><td>Greek Yogurt with Granola</td><td>Tuna Sandwich & Side Salad</td><td>Lean Beef Stir-fry with Brown Rice</td><td><span class="badge badge-success">Iron Boost</span></td></tr>
+                                <tr data-day="4" class="bg-light"><td>Thursday</td><td>Protein Smoothie</td><td>Leftover Stir-fry</td><td>Chicken Fajitas (Low Carb Wrap)</td><td><span class="badge badge-primary">Prep Efficient</span></td></tr>
+                                <tr data-day="5"><td>Friday</td><td>Whole Grain Toast with Peanut Butter</td><td>Quinoa Bowl with Beans & Corn</td><td>Homemade Pizza on Cauliflower Crust</td><td><span class="badge badge-warning">Flex Meal</span></td></tr>
+                                <tr data-day="6" class="bg-light"><td>Saturday</td><td>Pancakes with Fruit (Small Portion)</td><td>Sushi/Sashimi</td><td>Steak & Sweet Potato</td><td><span class="badge badge-dark">Balanced Refeed</span></td></tr>
+                                <tr data-day="0"><td>Sunday</td><td>Rest & Recharge</td><td>Rest & Recharge</td><td>Rest & Recharge</td><td><span class="badge badge-danger">Hydrate & Plan</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="plan-vegetarian" class="container tab-pane fade p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-lg m-0 text-center">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Breakfast</th>
+                                    <th>Lunch</th>
+                                    <th>Dinner</th>
+                                    <th>Focus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-day="1"><td>Monday</td><td>Tofu Scramble</td><td>Chickpea Salad Sandwich</td><td>Black Bean Burgers</td><td><span class="badge badge-success">Plant Protein</span></td></tr>
+                                <tr data-day="2" class="bg-light"><td>Tuesday</td><td>Yogurt Parfait</td><td>Hummus & Veggie Wrap</td><td>Pasta with Marinara</td><td><span class="badge badge-info">Healthy Carbs</span></td></tr>
+                                <tr data-day="3"><td>Wednesday</td><td>Smoothie Bowl</td><td>Leftover Black Bean Burgers</td><td>Big Salad with Halloumi</td><td><span class="badge badge-warning">Cheese Protein</span></td></tr>
+                                <tr data-day="4" class="bg-light"><td>Thursday</td><td>Chia Seed Pudding</td><td>Tofu Banh Mi Bowl</td><td>Roasted Veggies & Pesto Pasta</td><td><span class="badge badge-info">Healthy Fats</span></td></tr>
+                                <tr data-day="5"><td>Friday</td><td>Whole Wheat Pancakes</td><td>Veggie Pizza Slice</td><td>Homemade Veggie Chili</td><td><span class="badge badge-primary">Legume Power</span></td></tr>
+                                <tr data-day="6" class="bg-light"><td>Saturday</td><td>Avocado Toast & Tomato</td><td>Picnic: Sandwiches & Fruit</td><td>Indian Daal & Rice</td><td><span class="badge badge-dark">Cultural Food</span></td></tr>
+                                <tr data-day="0"><td>Sunday</td><td>Rest</td><td>Rest</td><td>Rest</td><td><span class="badge badge-danger">Hydrate</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="plan-low-carb" class="container tab-pane fade p-0">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-lg m-0 text-center">
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Breakfast</th>
+                                    <th>Lunch</th>
+                                    <th>Dinner</th>
+                                    <th>Focus</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr data-day="1"><td>Monday</td><td>Avocado & Bacon</td><td>Large Cobb Salad</td><td>Grilled Chicken & Asparagus</td><td><span class="badge badge-success">High Fat/Protein</span></td></tr>
+                                <tr data-day="2" class="bg-light"><td>Tuesday</td><td>Cheese Omelette</td><td>Tuna Lettuce Wrap</td><td>Pork Chops with Greens</td><td><span class="badge badge-info">Keto Friendly</span></td></tr>
+                                <tr data-day="3"><td>Wednesday</td><td>Bulletproof Coffee</td><td>Leftover Pork Chops</td><td>Salmon with Butter Sauce</td><td><span class="badge badge-warning">Omega-3</span></td></tr>
+                                <tr data-day="4" class="bg-light"><td>Thursday</td><td>Cream Cheese & Smoked Salmon</td><td>Chicken Broth & Cheese</td><td>Keto Meatloaf & Mashed Cauliflower</td><td><span class="badge badge-info">Comfort Food</span></td></tr>
+                                <tr data-day="5"><td>Friday</td><td>Egg Muffins</td><td>Leftover Meatloaf</td><td>Pork Belly & Keto Slaw</td><td><span class="badge badge-success">High Fat</span></td></tr>
+                                <tr data-day="6" class="bg-light"><td>Saturday</td><td>Steak & Eggs</td><td>Tuna Salad with Mayonnaise</td><td>Lamb Chops with Green Beans</td><td><span class="badge badge-dark">Weekend Feast</span></td></tr>
+                                <tr data-day="0"><td>Sunday</td><td>Rest</td><td>Rest</td><td>Rest</td><td><span class="badge badge-danger">Electrolytes</span></td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer container-fluid mt-5 py-5 px-sm-3 px-md-5 text-white">
+        <div class="container border-top border-dark pt-5">
+            <p class="m-0 text-center text-white">
+                &copy; <a class="text-white font-weight-bold" href="#">Fatloss</a> All Rights Reserved.
+            </p>
+        </div>
+    </div>
+
+    <a href="#" class="btn btn-outline-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="lib/easing/easing.min.js"></script>
+    <script src="lib/waypoints/waypoints.min.js"></script>
+    <script src="js/main.js"></script>
+
+    <script>
+        function highlightCurrentDay() {
+            // Get today's day number (0 for Sunday, 1 for Monday, ..., 6 for Saturday)
+            const todayIndex = new Date().getDay();
+
+            // Select all rows with a data-day attribute from all plans
+            const allPlanRows = document.querySelectorAll('#plan-healthy-eating tr[data-day], #plan-vegetarian tr[data-day], #plan-low-carb tr[data-day]');
+
+            // Loop through all rows and apply the highlight-today class to the row matching today's day
+            allPlanRows.forEach(row => {
+                // Get the day value from the data-day attribute
+                const rowDay = parseInt(row.getAttribute('data-day'));
+
+                // Check if the row's day matches today's index
+                if (rowDay === todayIndex) {
+                    row.classList.add('highlight-today', 'nutrition-theme-border-primary');
+                }
+                
+                // For alternating row background, remove 'bg-light' if 'highlight-today' is applied
+                if (row.classList.contains('highlight-today') && row.classList.contains('bg-light')) {
+                     row.classList.remove('bg-light');
+                }
+            });
+        }
+
+        // Run the function when the page is fully loaded
+        $(document).ready(function() {
+            highlightCurrentDay();
+        });
+    </script>
+</body>
+</html>
